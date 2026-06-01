@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexo Infiltrator 3026 — المقاومة الأخيرة</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="game-canvas"></canvas>
+<div id="ui-root"></div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+<!-- Core -->
+<script src="js/core/Config.js"></script>
+<script src="js/core/Utils.js"></script>
+<script src="js/core/EventEmitter.js"></script>
+<script src="js/core/Database.js"></script>
+<script src="js/core/StateManager.js"></script>
+
+<!-- Engine -->
+<script src="js/engine/Renderer.js"></script>
+<script src="js/engine/Physics.js"></script>
+<script src="js/engine/GameLoop.js"></script>
+<script src="js/engine/AssetLoader.js"></script>
+<script src="js/engine/SceneManager.js"></script>
+<script src="js/engine/ShadowSystem.js"></script>
+
+<!-- Input -->
+<script src="js/input/KeyboardInput.js"></script>
+<script src="js/input/MouseInput.js"></script>
+<script src="js/input/GamepadInput.js"></script>
+
+<!-- Player -->
+<script src="js/player/Player.js"></script>
+<script src="js/player/Disguise.js"></script>
+<script src="js/player/Inventory.js"></script>
+<script src="js/player/PlayerAnimator.js"></script>
+
+<!-- Drone -->
+<script src="js/drone/Drone.js"></script>
+<script src="js/drone/DroneController.js"></script>
+<script src="js/drone/DroneCamera.js"></script>
+<script src="js/drone/DroneExplosion.js"></script>
+<script src="js/drone/DroneFleet.js"></script>
+
+<!-- Objects -->
+<script src="js/objects/SmartSticker.js"></script>
+<script src="js/objects/InteractiveTarget.js"></script>
+<script src="js/objects/ExplosionTarget.js"></script>
+<script src="js/objects/PickupItem.js"></script>
+
+<!-- Enemies -->
+<script src="js/enemies/AlienGuard.js"></script>
+<script src="js/enemies/GuardAI.js"></script>
+<script src="js/enemies/PatrolSystem.js"></script>
+<script src="js/enemies/AlertSystem.js"></script>
+
+<!-- Locations (base then subtypes) -->
+<script src="js/locations/Location.js"></script>
+<script src="js/locations/WeaponsFactory.js"></script>
+<script src="js/locations/CentralBank.js"></script>
+<script src="js/locations/PowerPlant.js"></script>
+<script src="js/locations/CommCenter.js"></script>
+<script src="js/locations/OilRefinery.js"></script>
+<script src="js/locations/CommandCenter.js"></script>
+<script src="js/locations/MilitaryAirport.js"></script>
+<script src="js/locations/WaterPlant.js"></script>
+<script src="js/locations/MetalFactory.js"></script>
+<script src="js/locations/AmmoDepot.js"></script>
+
+<!-- Systems -->
+<script src="js/systems/StickerSystem.js"></script>
+<script src="js/systems/ExplosionChain.js"></script>
+<script src="js/systems/MissionSystem.js"></script>
+<script src="js/systems/StealthSystem.js"></script>
+<script src="js/systems/ProgressSystem.js"></script>
+
+<!-- UI -->
+<script src="js/ui/MainMenu.js"></script>
+<script src="js/ui/HUD.js"></script>
+<script src="js/ui/MiniMap.js"></script>
+<script src="js/ui/DroneUI.js"></script>
+<script src="js/ui/MissionBriefing.js"></script>
+<script src="js/ui/PauseMenu.js"></script>
+
+<!-- Audio -->
+<script src="js/audio/AudioManager.js"></script>
+<script src="js/audio/SoundEffects.js"></script>
+
+<!-- Main -->
+<script src="js/main.js"></script>
+</body>
+</html>
