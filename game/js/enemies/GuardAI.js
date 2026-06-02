@@ -204,7 +204,7 @@ window.GuardAI = {
 
   canSeePlayer(guard, playerPos) {
     if (guard.sightCone) {
-      return guard.sightCone.checkLoS(guard, playerPos);
+      return guard.sightCone.checkLoS(guard.pos, playerPos, window.GAME?.scene?.children || []);
     }
 
     const dist = Utils.dist2(guard.pos, playerPos);

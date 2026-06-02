@@ -12,7 +12,7 @@ window.Disguise = class Disguise {
     let guardsNearby = false;
 
     for (const guard of nearbyGuards) {
-      const dist = Utils.distance(this.player.pos, guard.pos);
+      const dist = Utils.dist2(this.player.pos, guard.pos);
       if (dist <= CONFIG.GUARD_SIGHT_RANGE) {
         if (guard.alertLevel > 0.5 && guard.isSuspicious(this.player.pos)) {
           guardsNearby = true;

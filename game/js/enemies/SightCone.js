@@ -48,7 +48,7 @@ window.SightCone = class SightCone {
     }
   }
 
-  checkLoS(guardPos, playerPos, sceneObjects) {
+  checkLoS(guardPos, playerPos, sceneObjects = []) {
     const guardEye = new THREE.Vector3(guardPos.x, guardPos.y + 1.5, guardPos.z);
     const playerHead = new THREE.Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
 

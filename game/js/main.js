@@ -653,11 +653,6 @@ function loadLocation(locId) {
   GAME.player.animator = new PlayerAnimator(GAME.camera);
   GAME.player.reset(spawnPos);
 
-  // Path grid for guard A* navigation
-  if (window.PathGrid) {
-    GAME.pathGrid = new PathGrid(loc.width, loc.depth, 2);
-  }
-
   // Drone fleet
   GAME.droneFleet = new DroneFleet(GAME.scene);
 
@@ -666,6 +661,11 @@ function loadLocation(locId) {
 
   // Fog based on location size
   const loc = GAME.currentLocation;
+
+  // Path grid for guard A* navigation
+  if (window.PathGrid) {
+    GAME.pathGrid = new PathGrid(loc.width, loc.depth, 2);
+  }
   GAME.renderer.setFog(0x050508, loc.width * 0.4, loc.width * 1.2);
 
   // Show HUD

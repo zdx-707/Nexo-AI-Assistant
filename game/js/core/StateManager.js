@@ -3,12 +3,12 @@ window.StateManager = class StateManager {
     this._events = events;
     this._current = 'menu';
     this._transitions = {
-      menu: ['briefing'],
-      briefing: ['playing'],
-      playing: ['drone', 'paused', 'gameover', 'win'],
+      menu: ['briefing', 'playing'],
+      briefing: ['playing', 'menu'],
+      playing: ['drone', 'paused', 'gameover', 'win', 'menu'],
       drone: ['playing', 'gameover'],
       paused: ['playing', 'menu'],
-      gameover: ['menu', 'briefing'],
+      gameover: ['menu', 'briefing', 'playing'],
       win: ['menu']
     };
   }
