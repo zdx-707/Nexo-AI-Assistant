@@ -4,6 +4,32 @@ window.WaterPlant = class WaterPlant extends window.Location {
     this.width = 50;
     this.depth = 50;
     this.wallHeight = 7;
+    this.wallColor = 0x2a4050;
+    this.floorColor = 0x151e25;
+  }
+
+  buildInterior() {
+    // Monitoring room
+    this.addPartition(-5, 0, 16, false);
+    this.addPartition(-5, 0, 10, true);
+
+    // Water engineer desks
+    [[-10, 2, 0],[-10, -4, 0],[-16, 2, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-9, 2],[-9,-4],[-15, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(-20, -4, 3, 0);
+
+    // Entrance security desk
+    const eDesk = this.loader.createDesk(0x2a4050);
+    eDesk.position.set(0, 0, 20);
+    this.scene.add(eDesk);
+    this.meshes.push(eDesk);
+    const eMon = this.loader.createMonitor();
+    eMon.position.set(0, 0.78, 19.7);
+    eMon.rotation.y = Math.PI;
+    this.scene.add(eMon);
+    this.meshes.push(eMon);
   }
 
   build() {

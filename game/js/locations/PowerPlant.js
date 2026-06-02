@@ -4,6 +4,32 @@ window.PowerPlant = class PowerPlant extends window.Location {
     this.width = 65;
     this.depth = 65;
     this.wallHeight = 12;
+    this.wallColor = 0x555566;
+    this.floorColor = 0x202025;
+  }
+
+  buildInterior() {
+    // Control room partition
+    this.addPartition(-5, 5, 20, true);
+    this.addPartition(-16, 5, 14, false);
+
+    // Engineer workstations
+    [[-10, 8, 0],[-10, 2, 0],[-10, -4, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-9, 8],[-9, 2],[-9,-4],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(-28, 5, 4, 0);
+
+    // Safety monitoring desk near entrance
+    const smDesk = this.loader.createDesk(0x444455);
+    smDesk.position.set(0, 0, 28);
+    this.scene.add(smDesk);
+    this.meshes.push(smDesk);
+    const smMon = this.loader.createMonitor();
+    smMon.position.set(0, 0.78, 27.7);
+    smMon.rotation.y = Math.PI;
+    this.scene.add(smMon);
+    this.meshes.push(smMon);
   }
 
   build() {

@@ -653,8 +653,8 @@ function loadLocation(locId) {
   const patrolSys = new PatrolSystem();
   patrolSys.assignRoutes(GAME.currentLocation.guards, locId);
 
-  // Spawn player at center
-  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, 10);
+  // Spawn player inside (center of building)
+  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, 0);
   GAME.player = new Player(GAME.scene, GAME.camera);
   GAME.player.inventory = new Inventory();
   GAME.player.disguise = new Disguise(GAME.player);
@@ -691,6 +691,7 @@ function loadLocation(locId) {
 
   GAME.state.transition('playing');
   if (GAME.touch) GAME.touch.show();
+  showLocationFade();
 }
 
 function cleanupLocation(resetState = true) {
@@ -706,6 +707,23 @@ function cleanupLocation(resetState = true) {
   GAME.explosionChain.cancel();
   if (GAME.touch) GAME.touch.hide();
   if (resetState) GAME.state.transition('menu');
+}
+
+function showLocationFade() {
+  let fade = document.getElementById('loc-fade');
+  if (!fade) {
+    fade = document.createElement('div');
+    fade.id = 'loc-fade';
+    fade.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9999;pointer-events:none;transition:opacity 1.8s ease';
+    document.body.appendChild(fade);
+  }
+  fade.style.opacity = '1';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      fade.style.opacity = '0';
+      setTimeout(() => fade.remove(), 2000);
+    });
+  });
 }
 
 boot().catch(console.error);

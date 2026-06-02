@@ -4,6 +4,28 @@ window.CommCenter = class CommCenter extends window.Location {
     this.width = 50;
     this.depth = 50;
     this.wallHeight = 8;
+    this.wallColor = 0x223344;
+    this.floorColor = 0x111820;
+  }
+
+  buildInterior() {
+    // Operations room divider
+    this.addPartition(-5, 0, 20, false);
+    this.addPartition(-5, 0, 12, true);
+
+    // Operator workstations
+    [[-12, -5, 0],[-12, -12, 0],[-12, -19, 0],[-18, -5, Math.PI],[-18, -12, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-11,-5],[-11,-12],[-11,-19],[-17,-5],[-17,-12]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+
+    // Filing area
+    this.addFilingCabinets(-22, -18, 4, 0);
+    this.addFilingCabinets(-22, -5, 3, 0);
+
+    // Supervisor desk
+    this.addDesk(10, 15, Math.PI);
+    this.addEmployee(9, 15, Math.PI);
   }
 
   build() {

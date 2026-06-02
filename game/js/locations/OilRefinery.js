@@ -4,6 +4,25 @@ window.OilRefinery = class OilRefinery extends window.Location {
     this.width = 75;
     this.depth = 75;
     this.wallHeight = 14;
+    this.wallColor = 0x4a3010;
+    this.floorColor = 0x1e1810;
+  }
+
+  buildInterior() {
+    // Process control room
+    this.addPartition(-5, -5, 22, true);
+    this.addPartition(-16, -5, 12, false);
+
+    // Operator stations
+    [[-10, -8, 0],[-10, -14, 0],[-10, -20, 0],[-22, -8, Math.PI],[-22, -14, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-9,-8],[-9,-14],[-9,-20],[-21,-8],[-21,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(-28, -8, 4, 0);
+
+    // Safety inspector desk
+    this.addDesk(20, 20, Math.PI);
+    this.addEmployee(19, 20, Math.PI);
   }
 
   build() {

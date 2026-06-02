@@ -181,37 +181,316 @@ window.AssetLoader = class AssetLoader {
   }
 
   createGuardMesh() {
-    const group = new THREE.Group();
+    return Math.random() > 0.4 ? this.createAlienMesh() : this.createTurtleMesh();
+  }
 
-    const torso = this.createBox(0.44, 0.52, 0.22, 0x1a1a2e);
-    torso.position.set(0, 0.86, 0);
+  createAlienMesh() {
+    const group = new THREE.Group();
+    const skin = 0x7ec8a0;
+    const suit = 0x1a0a2e;
+
+    // torso — thin
+    const torso = this.createBox(0.38, 0.5, 0.18, suit);
+    torso.position.set(0, 0.9, 0);
     group.add(torso);
 
-    const head = this.createBox(0.32, 0.32, 0.27, 0x2a2a1e);
-    head.position.set(0, 1.32, 0);
+    // neck
+    const neck = this.createCylinder(0.07, 0.07, 0.18, 8, skin);
+    neck.position.set(0, 1.19, 0);
+    group.add(neck);
+
+    // large oval head
+    const headGeo = new THREE.SphereGeometry(0.26, 16, 12);
+    const headMat = new THREE.MeshPhongMaterial({ color: skin });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.scale.set(1, 1.25, 0.9);
+    head.position.set(0, 1.5, 0);
+    head.castShadow = true;
     group.add(head);
 
-    const visor = this.createBox(0.26, 0.1, 0.06, 0xff4400);
-    visor.position.set(0, 1.35, 0.15);
-    group.add(visor);
+    // big black almond eyes with iris glow
+    const eyeGeo = new THREE.SphereGeometry(0.08, 12, 8);
+    const eyeMat = new THREE.MeshPhongMaterial({ color: 0x050510 });
+    const irisGeo = new THREE.SphereGeometry(0.045, 8, 6);
+    const irisMat = new THREE.MeshBasicMaterial({ color: 0x220088 });
+    [-0.1, 0.1].forEach(x => {
+      const eye = new THREE.Mesh(eyeGeo, eyeMat);
+      eye.scale.set(1.4, 0.7, 0.4);
+      eye.position.set(x, 1.53, 0.22);
+      group.add(eye);
+      const iris = new THREE.Mesh(irisGeo, irisMat);
+      iris.position.set(x, 1.53, 0.245);
+      group.add(iris);
+    });
 
-    const armL = this.createBox(0.13, 0.42, 0.13, 0x111122);
-    armL.position.set(-0.3, 0.8, 0);
+    // antenna
+    const ant = this.createCylinder(0.02, 0.02, 0.3, 6, 0x334433);
+    ant.position.set(0.06, 1.82, 0);
+    group.add(ant);
+    const antTip = this.createSphere(0.05, 8, 0x00ffaa);
+    antTip.position.set(0.06, 1.97, 0);
+    group.add(antTip);
+
+    // thin arms
+    const armL = this.createCylinder(0.06, 0.05, 0.48, 8, skin);
+    armL.position.set(-0.28, 0.82, 0);
+    armL.rotation.z = 0.2;
     group.add(armL);
-
-    const armR = this.createBox(0.13, 0.42, 0.13, 0x111122);
-    armR.position.set(0.3, 0.8, 0);
+    const armR = this.createCylinder(0.06, 0.05, 0.48, 8, skin);
+    armR.position.set(0.28, 0.82, 0);
+    armR.rotation.z = -0.2;
     group.add(armR);
 
-    const legL = this.createBox(0.15, 0.46, 0.15, 0x0d0d1a);
-    legL.position.set(-0.12, 0.37, 0);
+    // legs
+    const legL = this.createCylinder(0.08, 0.07, 0.52, 8, suit);
+    legL.position.set(-0.12, 0.38, 0);
     group.add(legL);
-
-    const legR = this.createBox(0.15, 0.46, 0.15, 0x0d0d1a);
-    legR.position.set(0.12, 0.37, 0);
+    const legR = this.createCylinder(0.08, 0.07, 0.52, 8, suit);
+    legR.position.set(0.12, 0.38, 0);
     group.add(legR);
 
     return group;
+  }
+
+  createTurtleMesh() {
+    const group = new THREE.Group();
+    const skin = 0x4a7c4e;
+    const shell = 0x2d5a1b;
+
+    // stubby legs
+    [[- 0.18, 0, 0.12],[0.18, 0, 0.12],[-0.18, 0, -0.12],[0.18, 0, -0.12]].forEach(([x,y,z]) => {
+      const leg = this.createBox(0.14, 0.28, 0.14, skin);
+      leg.position.set(x, 0.22, z);
+      group.add(leg);
+    });
+
+    // wide body
+    const body = this.createBox(0.52, 0.36, 0.38, skin);
+    body.position.set(0, 0.52, 0);
+    group.add(body);
+
+    // dome shell
+    const shellGeo = new THREE.SphereGeometry(0.32, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.6);
+    const shellMat = new THREE.MeshPhongMaterial({ color: shell });
+    const shellMesh = new THREE.Mesh(shellGeo, shellMat);
+    shellMesh.scale.set(1, 0.75, 0.9);
+    shellMesh.position.set(0, 0.64, 0);
+    shellMesh.castShadow = true;
+    group.add(shellMesh);
+
+    // shell pattern hexagons (flat boxes)
+    [[0,0],[0.15,0.1],[-0.15,0.1],[0,0.2],[0.12,-0.1],[-0.12,-0.1]].forEach(([ox,oz]) => {
+      const hex = this.createBox(0.1, 0.02, 0.1, 0x1a3d0f);
+      hex.position.set(ox, 0.92, oz);
+      group.add(hex);
+    });
+
+    // short neck + round head
+    const neck = this.createCylinder(0.09, 0.1, 0.14, 8, skin);
+    neck.position.set(0, 0.77, 0.22);
+    neck.rotation.x = 0.4;
+    group.add(neck);
+
+    const headGeo = new THREE.SphereGeometry(0.16, 12, 10);
+    const headMat = new THREE.MeshPhongMaterial({ color: skin });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.scale.set(1, 0.85, 1.1);
+    head.position.set(0, 0.9, 0.36);
+    head.castShadow = true;
+    group.add(head);
+
+    // small dark eyes
+    [-0.07, 0.07].forEach(x => {
+      const eye = this.createSphere(0.04, 8, 0x0a0a0a);
+      eye.position.set(x, 0.93, 0.51);
+      group.add(eye);
+    });
+
+    return group;
+  }
+
+  // ── Furniture ──────────────────────────────────────────
+  createDesk(color = 0x8b6914) {
+    const g = new THREE.Group();
+    const top = this.createBox(1.6, 0.06, 0.8, color);
+    top.position.set(0, 0.75, 0);
+    g.add(top);
+    [[-0.72,-0.34],[-0.72,0.34],[0.72,-0.34],[0.72,0.34]].forEach(([x,z]) => {
+      const leg = this.createBox(0.06, 0.74, 0.06, 0x5a4010);
+      leg.position.set(x, 0.37, z);
+      g.add(leg);
+    });
+    // drawer unit
+    const drawer = this.createBox(0.45, 0.6, 0.76, 0x7a5a12);
+    drawer.position.set(0.55, 0.44, 0);
+    g.add(drawer);
+    [0.1,-0.1].forEach(y => {
+      const handle = this.createBox(0.16, 0.04, 0.04, 0xccaa44);
+      handle.position.set(0.8, 0.44 + y, 0.4);
+      g.add(handle);
+    });
+    return g;
+  }
+
+  createChair(color = 0x222244) {
+    const g = new THREE.Group();
+    const seat = this.createBox(0.52, 0.07, 0.5, color);
+    seat.position.set(0, 0.46, 0);
+    g.add(seat);
+    const back = this.createBox(0.5, 0.5, 0.07, color);
+    back.position.set(0, 0.73, -0.22);
+    g.add(back);
+    // 5-star base
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      const spoke = this.createBox(0.32, 0.04, 0.06, 0x333333);
+      spoke.position.set(Math.cos(a) * 0.18, 0.06, Math.sin(a) * 0.18);
+      spoke.rotation.y = a;
+      g.add(spoke);
+      const wheel = this.createCylinder(0.04, 0.04, 0.08, 8, 0x111111);
+      wheel.position.set(Math.cos(a) * 0.34, 0.04, Math.sin(a) * 0.34);
+      g.add(wheel);
+    }
+    const pole = this.createCylinder(0.04, 0.04, 0.38, 8, 0x444444);
+    pole.position.set(0, 0.24, 0);
+    g.add(pole);
+    return g;
+  }
+
+  _makeScreenTex() {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 160;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#001020';
+    ctx.fillRect(0, 0, 256, 160);
+    ctx.font = '11px monospace';
+    ctx.fillStyle = '#00ff88';
+    const lines = ['> نظام آمن','> حالة: نشط','> وصول: مقيد','> ','> 3026-06-02'];
+    lines.forEach((l, i) => ctx.fillText(l, 8, 22 + i * 18));
+    ctx.fillStyle = '#0044ff';
+    ctx.fillRect(0, 120, 256, 40);
+    ctx.fillStyle = '#88ddff';
+    ctx.font = 'bold 13px monospace';
+    ctx.fillText('NEXO CORP SYS v3.1', 8, 142);
+    return new THREE.CanvasTexture(c);
+  }
+
+  createMonitor() {
+    const g = new THREE.Group();
+    const screen = this.createBox(0.72, 0.44, 0.06, 0x111122);
+    screen.position.set(0, 0.22, 0);
+    const screenTex = this._makeScreenTex();
+    const glowGeo = new THREE.BoxGeometry(0.66, 0.38, 0.01);
+    const glowMat = new THREE.MeshStandardMaterial({
+      map: screenTex,
+      emissiveMap: screenTex,
+      emissive: new THREE.Color(1, 1, 1),
+      emissiveIntensity: 0.9,
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.set(0, 0.22, 0.04);
+    g.add(screen);
+    g.add(glow);
+    const stand = this.createBox(0.08, 0.18, 0.08, 0x333344);
+    stand.position.set(0, 0.02, 0);
+    g.add(stand);
+    const base = this.createBox(0.28, 0.04, 0.22, 0x222233);
+    base.position.set(0, -0.06, 0.06);
+    g.add(base);
+    return g;
+  }
+
+  createKeyboard() {
+    const kb = this.createBox(0.42, 0.03, 0.16, 0x1a1a2a);
+    // key rows
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 10; col++) {
+        const key = this.createBox(0.03, 0.02, 0.03, 0x2a2a3a);
+        key.position.set(-0.185 + col * 0.04, 0.025, -0.055 + row * 0.04);
+        kb.add(key);
+      }
+    }
+    return kb;
+  }
+
+  createFilingCabinet() {
+    const g = new THREE.Group();
+    const body = this.createBox(0.5, 1.2, 0.55, 0x888899);
+    body.position.set(0, 0.6, 0);
+    g.add(body);
+    [-0.35, -0.05, 0.25].forEach(y => {
+      const drawer = this.createBox(0.44, 0.24, 0.02, 0x999aaa);
+      drawer.position.set(0, 0.6 + y, 0.29);
+      g.add(drawer);
+      const handle = this.createBox(0.18, 0.04, 0.04, 0xccccdd);
+      handle.position.set(0, 0.6 + y, 0.32);
+      g.add(handle);
+    });
+    return g;
+  }
+
+  createCeilingLight() {
+    const g = new THREE.Group();
+    const housing = this.createBox(1.2, 0.08, 0.3, 0xaaaaaa);
+    g.add(housing);
+    const tube = this.createBox(1.1, 0.04, 0.22, 0xeeeeff);
+    tube.position.set(0, -0.06, 0);
+    const tubeMat = new THREE.MeshBasicMaterial({ color: 0xddeeff });
+    tube.material = tubeMat;
+    g.add(tube);
+    return g;
+  }
+
+  createEmployeeMesh() {
+    const g = new THREE.Group();
+    const suitColors = [0x1a1a4a, 0x2a1a1a, 0x1a2a1a, 0x333355];
+    const suit = suitColors[Math.floor(Math.random() * suitColors.length)];
+    const skinTone = 0xd4a574;
+
+    // legs
+    const legL = this.createBox(0.14, 0.44, 0.14, suit);
+    legL.position.set(-0.1, 0.34, 0);
+    g.add(legL);
+    const legR = this.createBox(0.14, 0.44, 0.14, suit);
+    legR.position.set(0.1, 0.34, 0);
+    g.add(legR);
+
+    // torso + jacket
+    const torso = this.createBox(0.42, 0.5, 0.2, suit);
+    torso.position.set(0, 0.86, 0);
+    g.add(torso);
+    // shirt/tie strip
+    const shirt = this.createBox(0.14, 0.28, 0.03, 0xffffff);
+    shirt.position.set(0, 0.88, 0.1);
+    g.add(shirt);
+    const tie = this.createBox(0.06, 0.22, 0.03, 0xaa2222);
+    tie.position.set(0, 0.85, 0.115);
+    g.add(tie);
+
+    // arms
+    const armL = this.createBox(0.13, 0.42, 0.13, suit);
+    armL.position.set(-0.28, 0.82, 0);
+    g.add(armL);
+    const armR = this.createBox(0.13, 0.42, 0.13, suit);
+    armR.position.set(0.28, 0.82, 0);
+    g.add(armR);
+
+    // neck
+    const neck = this.createCylinder(0.07, 0.07, 0.12, 8, skinTone);
+    neck.position.set(0, 1.16, 0);
+    g.add(neck);
+
+    // head
+    const head = this.createBox(0.28, 0.3, 0.24, skinTone);
+    head.position.set(0, 1.36, 0);
+    g.add(head);
+
+    // hair
+    const hair = this.createBox(0.3, 0.1, 0.26, Math.random() > 0.5 ? 0x1a0a00 : 0x553311);
+    hair.position.set(0, 1.52, 0);
+    g.add(hair);
+
+    return g;
   }
 
   createStickerMesh() {

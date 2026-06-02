@@ -4,6 +4,38 @@ window.CommandCenter = class CommandCenter extends window.Location {
     this.width = 70;
     this.depth = 70;
     this.wallHeight = 10;
+    this.wallColor = 0x1a2030;
+    this.floorColor = 0x111520;
+  }
+
+  buildInterior() {
+    // Briefing room
+    this.addPartition(0, -5, 24, true);
+    this.addPartition(0, -5, 16, false);
+
+    // Strategy desks
+    [[-8, -12, 0],[-8, -18, 0],[-8, -24, 0],[-15, -12, Math.PI],[-15, -18, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-7,-12],[-7,-18],[-7,-24],[-14,-12],[-14,-18]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+
+    // General's office
+    this.addPartition(15, -5, 16, false);
+    this.addPartition(15, -21, 16, true);
+    this.addDesk(22, -13, Math.PI);
+    this.addEmployee(21, -13, Math.PI);
+    this.addFilingCabinets(28, -8, 4, 0);
+
+    // Guard post at entrance
+    const gDesk = this.loader.createDesk(0x333355);
+    gDesk.position.set(0, 0, 28);
+    this.scene.add(gDesk);
+    this.meshes.push(gDesk);
+    const gMon = this.loader.createMonitor();
+    gMon.position.set(0, 0.78, 27.7);
+    gMon.rotation.y = Math.PI;
+    this.scene.add(gMon);
+    this.meshes.push(gMon);
   }
 
   build() {

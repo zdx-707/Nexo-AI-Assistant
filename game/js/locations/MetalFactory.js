@@ -4,6 +4,30 @@ window.MetalFactory = class MetalFactory extends window.Location {
     this.width = 60;
     this.depth = 60;
     this.wallHeight = 9;
+    this.wallColor = 0x404040;
+    this.floorColor = 0x252525;
+  }
+
+  buildInterior() {
+    // Admin corridor left
+    this.addPartition(-8, -5, 20, false);
+    this.addPartition(-8, -5, 14, true);
+
+    // Admin desks
+    [[-14, -8, 0],[-14, -14, 0],[-20, -8, Math.PI],[-20, -14, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-13,-8],[-13,-14],[-19,-8],[-19,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(-25, -8, 3, 0);
+
+    // Quality control station
+    this.addDesk(18, 20, Math.PI);
+    this.addEmployee(17, 20, Math.PI);
+    const qMon = this.loader.createMonitor();
+    qMon.position.set(18, 0.78, 19.7);
+    qMon.rotation.y = Math.PI;
+    this.scene.add(qMon);
+    this.meshes.push(qMon);
   }
 
   build() {

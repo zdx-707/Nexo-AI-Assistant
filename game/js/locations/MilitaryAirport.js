@@ -4,6 +4,32 @@ window.MilitaryAirport = class MilitaryAirport extends window.Location {
     this.width = 100;
     this.depth = 80;
     this.wallHeight = 8;
+    this.wallColor = 0x3a3a2a;
+    this.floorColor = 0x282820;
+  }
+
+  buildInterior() {
+    // Control tower office
+    this.addPartition(30, -10, 20, false);
+    this.addPartition(30, -10, 16, true);
+
+    // ATC workstations
+    [[35, -14, 0],[35, -20, 0],[42, -14, Math.PI],[42, -20, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[36,-14],[36,-20],[43,-14],[43,-20]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(46, -10, 3, 0);
+
+    // Security checkpoint near entrance
+    const sDesk = this.loader.createDesk(0x3a3a2a);
+    sDesk.position.set(0, 0, 32);
+    this.scene.add(sDesk);
+    this.meshes.push(sDesk);
+    const sMon = this.loader.createMonitor();
+    sMon.position.set(0, 0.78, 31.7);
+    sMon.rotation.y = Math.PI;
+    this.scene.add(sMon);
+    this.meshes.push(sMon);
   }
 
   build() {

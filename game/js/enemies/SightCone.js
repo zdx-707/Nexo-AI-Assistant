@@ -22,6 +22,7 @@ window.SightCone = class SightCone {
 
     this.coneMesh = new THREE.Mesh(geometry, material);
     this.coneMesh.position.set(0, 0, this.range / 2);
+    this.coneMesh.visible = false;
 
     const pivot = new THREE.Object3D();
     pivot.add(this.coneMesh);

@@ -4,6 +4,41 @@ window.WeaponsFactory = class WeaponsFactory extends window.Location {
     this.width = 70;
     this.depth = 70;
     this.wallHeight = 10;
+    this.wallColor = 0x3a4a2a;
+    this.floorColor = 0x2a2a2a;
+  }
+
+  buildInterior() {
+    // Office wing partition (left side)
+    this.addPartition(-12, -10, 22, false);
+    this.addPartition(-12, -10, 14, true);
+
+    // Office desks cluster
+    const officeDesks = [
+      [-20, -18, 0], [-20, -12, 0], [-20, -6, 0],
+      [-25, -18, Math.PI], [-25, -12, Math.PI],
+    ];
+    officeDesks.forEach(([x, z, y]) => this.addDesk(x, z, y));
+
+    // Employees at desks
+    [[-19, -18],[-19, -12],[-19, -6],[-24, -18],[-24, -12]].forEach(([x,z]) => {
+      this.addEmployee(x, z, Math.PI);
+    });
+
+    // Filing cabinets
+    this.addFilingCabinets(-30, -18, 4, 0);
+    this.addFilingCabinets(-30, -5, 3, 0);
+
+    // Security desk near entrance
+    const secDesk = this.loader.createDesk(0x444444);
+    secDesk.position.set(0, 0, 25);
+    this.scene.add(secDesk);
+    this.meshes.push(secDesk);
+    const secMon = this.loader.createMonitor();
+    secMon.position.set(0, 0.78, 24.7);
+    secMon.rotation.y = Math.PI;
+    this.scene.add(secMon);
+    this.meshes.push(secMon);
   }
 
   build() {

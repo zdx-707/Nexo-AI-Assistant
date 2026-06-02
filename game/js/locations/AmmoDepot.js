@@ -4,6 +4,32 @@ window.AmmoDepot = class AmmoDepot extends window.Location {
     this.width = 65;
     this.depth = 65;
     this.wallHeight = 8;
+    this.wallColor = 0x2a2010;
+    this.floorColor = 0x1a1810;
+  }
+
+  buildInterior() {
+    // Inventory office wing
+    this.addPartition(-10, 5, 18, true);
+    this.addPartition(-10, 5, 12, false);
+
+    // Logistics desks
+    [[-16, 8, 0],[-16, 2, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
+      this.addDesk(x, z, rot);
+    });
+    [[-15, 8],[-15, 2],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    this.addFilingCabinets(-28, 5, 4, 0);
+
+    // Checkpoint desk at entrance
+    const cDesk = this.loader.createDesk(0x4a3010);
+    cDesk.position.set(0, 0, 26);
+    this.scene.add(cDesk);
+    this.meshes.push(cDesk);
+    const cMon = this.loader.createMonitor();
+    cMon.position.set(0, 0.78, 25.7);
+    cMon.rotation.y = Math.PI;
+    this.scene.add(cMon);
+    this.meshes.push(cMon);
   }
 
   build() {
