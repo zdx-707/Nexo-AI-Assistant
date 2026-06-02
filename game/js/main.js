@@ -21,7 +21,7 @@ const LOCATION_ICONS = {
 window.GAME = {
   canvas: null, renderer: null, scene: null, camera: null,
   loop: null, events: null, db: null, state: null,
-  keyboard: null, mouse: null, gamepad: null,
+  keyboard: null, mouse: null, gamepad: null, touch: null,
   player: null, droneFleet: null, droneController: null, droneCamera: null,
   alertSystem: null, stickerSystem: null, explosionChain: null,
   missionSystem: null, stealthSystem: null, progressSystem: null,
@@ -29,6 +29,7 @@ window.GAME = {
   mainMenu: null, hud: null, minimap: null, droneUI: null,
   briefing: null, pauseMenu: null, audio: null,
   postProcessing: null, pathGrid: null,
+  isMobile: false,
   stickers: [],
   missionTimer: 0,
   locationMapEl: null,
@@ -66,6 +67,12 @@ async function boot() {
   GAME.keyboard = new KeyboardInput();
   GAME.mouse = new MouseInput(canvas);
   GAME.gamepad = new GamepadInput();
+  GAME.isMobile = TouchInput.isMobile();
+  if (GAME.isMobile) {
+    GAME.touch = new TouchInput();
+    // On mobile skip pointer lock, use touch look instead
+    GAME.mouse.locked = true;
+  }
 
   // Audio
   GAME.audio = new AudioManager();
@@ -121,6 +128,7 @@ function update(dt) {
   GAME.keyboard.update();
   GAME.mouse.update();
   GAME.gamepad.update();
+  if (GAME.touch) GAME.touch.apply(GAME.keyboard, GAME.mouse);
 
   const s = GAME.state.current;
 
@@ -682,6 +690,7 @@ function loadLocation(locId) {
   }, { once: false });
 
   GAME.state.transition('playing');
+  if (GAME.touch) GAME.touch.show();
 }
 
 function cleanupLocation(resetState = true) {
@@ -695,6 +704,7 @@ function cleanupLocation(resetState = true) {
   GAME.stickers = [];
   GAME.alertSystem.reset();
   GAME.explosionChain.cancel();
+  if (GAME.touch) GAME.touch.hide();
   if (resetState) GAME.state.transition('menu');
 }
 
