@@ -641,7 +641,15 @@ function loadLocation(locId) {
   GAME.currentLocation = new Ctor(GAME.scene);
   GAME.currentLocation.build();
 
-  // Set up lighting
+  // Set up lighting — ambient covers outside area, directional simulates overhead
+  const ambientLight = new THREE.AmbientLight(0x8899bb, 0.85);
+  GAME.scene.add(ambientLight);
+
+  const moonLight = new THREE.DirectionalLight(0xaabbcc, 0.7);
+  moonLight.position.set(10, 30, 20);
+  moonLight.castShadow = false;
+  GAME.scene.add(moonLight);
+
   const shadowSys = new ShadowSystem(GAME.renderer);
   shadowSys.createFactoryLighting(GAME.scene);
 
@@ -677,7 +685,7 @@ function loadLocation(locId) {
   if (window.PathGrid) {
     GAME.pathGrid = new PathGrid(loc.width, loc.depth, 2);
   }
-  GAME.renderer.setFog(0x050508, loc.width * 0.4, loc.width * 1.2);
+  GAME.renderer.setFog(0x101018, loc.width * 1.2, loc.width * 2.8);
 
   // Show HUD
   GAME.hud?.show();
