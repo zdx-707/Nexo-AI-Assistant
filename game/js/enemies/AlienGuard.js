@@ -11,15 +11,26 @@ window.AlienGuard = class AlienGuard {
     this.alertLevel = 0;
     this.target = null;
     this.alive = true;
+    this.path = [];
+    this.pathTarget = 0;
+    this.lastKnownPlayerPos = null;
+    this.lostTimer = 0;
+    this.searchTimer = 0;
     this.mesh = new AssetLoader().createGuardMesh();
     this.mesh.position.copy(this.pos);
     scene.add(this.mesh);
+    this.sightCone = window.SightCone ? new SightCone(scene, this) : null;
   }
 
   update(dt) {
     if (!this.alive) return;
+    if (this.sightCone) this.sightCone.update(this.pos, this.yaw, this.alertLevel);
     if (window.GuardAI) {
       window.GuardAI.update(this, dt);
+      if (this.mesh) {
+        this.mesh.position.copy(this.pos);
+        this.mesh.rotation.y = this.yaw;
+      }
       return;
     }
     if (!this.patrolPoints || this.patrolPoints.length === 0) return;

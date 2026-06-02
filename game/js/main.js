@@ -28,6 +28,7 @@ window.GAME = {
   currentLocation: null, currentLocationId: null,
   mainMenu: null, hud: null, minimap: null, droneUI: null,
   briefing: null, pauseMenu: null, audio: null,
+  postProcessing: null, pathGrid: null,
   stickers: [],
   missionTimer: 0,
   locationMapEl: null,
@@ -49,6 +50,12 @@ async function boot() {
   GAME.scene = GAME.renderer.scene;
   GAME.camera = GAME.renderer.camera;
   GAME.renderer.setFog(0x050508, 30, 80);
+
+  // Post-processing (Bloom + Glitch on alarm)
+  if (window.PostProcessing) {
+    GAME.postProcessing = new PostProcessing(GAME.renderer.renderer, GAME.scene, GAME.camera);
+    GAME.renderer.setPostProcessing(GAME.postProcessing);
+  }
 
   // Game loop
   GAME.loop = new GameLoop();
@@ -100,7 +107,10 @@ async function boot() {
     GAME.audio.play('alarm_loud');
   });
   GAME.events.on('guardAlert', () => GAME.audio.play('alert_beep'));
-  GAME.events.on('alarmTriggered', () => GAME.audio.play('alarm'));
+  GAME.events.on('alarmTriggered', () => {
+    GAME.audio.play('alarm');
+    GAME.postProcessing?.triggerGlitch(800);
+  });
 
   // Show main menu
   GAME.mainMenu.show(!!save);
@@ -168,6 +178,11 @@ function updatePlaying(dt) {
   // Check mission complete
   if (GAME.currentLocation?.isCompleted()) {
     completeMission();
+  }
+
+  // Spatial audio listener tracking
+  if (GAME.player && GAME.audio?.isReady) {
+    GAME.audio.updateListener(GAME.player.pos, GAME.player.yaw || 0);
   }
 
   // Check game over: player dead
@@ -638,6 +653,11 @@ function loadLocation(locId) {
   GAME.player.animator = new PlayerAnimator(GAME.camera);
   GAME.player.reset(spawnPos);
 
+  // Path grid for guard A* navigation
+  if (window.PathGrid) {
+    GAME.pathGrid = new PathGrid(loc.width, loc.depth, 2);
+  }
+
   // Drone fleet
   GAME.droneFleet = new DroneFleet(GAME.scene);
 
@@ -670,6 +690,7 @@ function cleanupLocation(resetState = true) {
   GAME.droneFleet?.destroyAll();
   GAME.droneFleet = null;
   GAME.player = null;
+  GAME.pathGrid = null;
   GAME.stickerSystem.clear();
   GAME.stickers = [];
   GAME.alertSystem.reset();

@@ -3,6 +3,8 @@ window.GuardAI = {
     const player = window.GAME?.player;
     const playerPos = player?.pos;
 
+    this.checkHearing(guard, playerPos);
+
     switch (guard.state) {
       case 'patrol': {
         const target = guard.patrolPoints[guard.patrolIndex];
@@ -12,16 +14,17 @@ window.GuardAI = {
 
         if (dist < 0.5) {
           guard.patrolIndex = (guard.patrolIndex + 1) % guard.patrolPoints.length;
+          guard.path = [];
         } else {
-          dir.normalize();
-          guard.pos.x += dir.x * guard.speed * dt;
-          guard.pos.z += dir.z * guard.speed * dt;
-          guard.yaw = Math.atan2(dir.x, dir.z);
+          if (!guard.path || guard.path.length === 0) {
+            this.recalcPath(guard, targetVec);
+          }
+          this.moveAlongPath(guard, dt, guard.speed);
         }
 
         if (playerPos && this.canSeePlayer(guard, playerPos)) {
           guard.state = 'suspicious';
-          guard.alertLevel = 0.3;
+          guard.alertLevel = Math.max(guard.alertLevel || 0, 0.3);
           guard.lostTimer = 0;
         }
         break;
@@ -60,6 +63,7 @@ window.GuardAI = {
         if (playerPos) {
           guard.lastKnownPlayerPos = playerPos.clone();
         }
+        guard.path = [];
         guard.state = 'chase';
         guard.lostTimer = 0;
         if (window.GAME?.events) {
@@ -74,31 +78,37 @@ window.GuardAI = {
           if (canSee) {
             guard.lastKnownPlayerPos = playerPos.clone();
             guard.lostTimer = 0;
+            guard.path = [];
           } else {
             guard.lostTimer = (guard.lostTimer || 0) + dt;
             if (guard.lostTimer >= 5) {
               guard.state = 'search';
               guard.searchTimer = 0;
+              guard.path = [];
               break;
             }
           }
 
-          const dir = new THREE.Vector3().subVectors(playerPos, guard.pos);
-          const dist = dir.length();
+          const dist = guard.pos.distanceTo(playerPos);
 
           if (dist < 1.5) {
             player.takeDamage();
           } else {
-            dir.normalize();
-            guard.pos.x += dir.x * guard.speed * 1.5 * dt;
-            guard.pos.z += dir.z * guard.speed * 1.5 * dt;
-            guard.yaw = Math.atan2(dir.x, dir.z);
+            if (canSee) {
+              if (!guard.path || guard.path.length === 0) {
+                this.recalcPath(guard, playerPos);
+              }
+            } else if (guard.lastKnownPlayerPos && (!guard.path || guard.path.length === 0)) {
+              this.recalcPath(guard, guard.lastKnownPlayerPos);
+            }
+            this.moveAlongPath(guard, dt, guard.speed * 1.5);
           }
         } else {
           guard.lostTimer = (guard.lostTimer || 0) + dt;
           if (guard.lostTimer >= 5) {
             guard.state = 'search';
             guard.searchTimer = 0;
+            guard.path = [];
           }
         }
         break;
@@ -107,20 +117,20 @@ window.GuardAI = {
       case 'search': {
         const dest = guard.lastKnownPlayerPos;
         if (dest) {
-          const dir = new THREE.Vector3().subVectors(dest, guard.pos);
-          const dist = dir.length();
+          if (!guard.path || guard.path.length === 0) {
+            this.recalcPath(guard, dest);
+          }
 
-          if (dist > 0.5) {
-            dir.normalize();
-            guard.pos.x += dir.x * guard.speed * dt;
-            guard.pos.z += dir.z * guard.speed * dt;
-            guard.yaw = Math.atan2(dir.x, dir.z);
+          const distToDest = guard.pos.distanceTo(dest);
+          if (distToDest > 0.5) {
+            this.moveAlongPath(guard, dt, guard.speed);
           } else {
             guard.searchTimer = (guard.searchTimer || 0) + dt;
             if (guard.searchTimer >= 4) {
               guard.state = 'patrol';
               guard.searchTimer = 0;
               guard.lostTimer = 0;
+              guard.path = [];
             }
           }
         } else {
@@ -129,14 +139,74 @@ window.GuardAI = {
             guard.state = 'patrol';
             guard.searchTimer = 0;
             guard.lostTimer = 0;
+            guard.path = [];
           }
+        }
+
+        if (playerPos && this.canSeePlayer(guard, playerPos)) {
+          guard.lastKnownPlayerPos = playerPos.clone();
+          guard.state = 'chase';
+          guard.lostTimer = 0;
+          guard.path = [];
         }
         break;
       }
     }
   },
 
+  checkHearing(guard, playerPos) {
+    const noiseLevel = window.GAME?.stealthSystem?.noiseLevel || 0;
+    if (noiseLevel <= 30 || !playerPos) return;
+
+    const hearRange = CONFIG.GUARD_HEAR_RANGE * (noiseLevel / 100);
+    const dist = guard.pos.distanceTo(playerPos);
+    if (dist > hearRange) return;
+
+    const increase = (1 - dist / hearRange) * (noiseLevel / 100) * 0.5;
+    guard.alertLevel = Utils.clamp((guard.alertLevel || 0) + increase, 0, 1);
+
+    if (guard.state === 'patrol' && guard.alertLevel >= 0.3) {
+      guard.state = 'suspicious';
+      guard.lostTimer = 0;
+    }
+  },
+
+  recalcPath(guard, destWorldPos) {
+    guard.path = window.GAME?.pathGrid?.findPath(guard.pos, destWorldPos) || [];
+    guard.pathTarget = 0;
+  },
+
+  moveAlongPath(guard, dt, speed) {
+    if (guard.path && guard.path.length > 0) {
+      const wp = guard.path[guard.pathTarget];
+      if (!wp) {
+        guard.path = [];
+        return;
+      }
+
+      const dx = wp.x - guard.pos.x;
+      const dz = wp.z - guard.pos.z;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+
+      if (dist < 0.5) {
+        guard.pathTarget++;
+        if (guard.pathTarget >= guard.path.length) {
+          guard.path = [];
+        }
+      } else {
+        const inv = 1 / dist;
+        guard.pos.x += dx * inv * speed * dt;
+        guard.pos.z += dz * inv * speed * dt;
+        guard.yaw = Math.atan2(dx, dz);
+      }
+    }
+  },
+
   canSeePlayer(guard, playerPos) {
+    if (guard.sightCone) {
+      return guard.sightCone.checkLoS(guard, playerPos);
+    }
+
     const dist = Utils.dist2(guard.pos, playerPos);
     if (dist >= CONFIG.GUARD_SIGHT_RANGE) return false;
 

@@ -20,13 +20,23 @@ window.GameRenderer = class GameRenderer {
     dirLight.shadow.mapSize.height = 2048;
     this.scene.add(dirLight);
 
+    this.postProcessing = null;
+
     window.addEventListener('resize', () => {
       this.resize(CONFIG.WIDTH, CONFIG.HEIGHT);
     });
   }
 
+  setPostProcessing(pp) {
+    this.postProcessing = pp;
+  }
+
   render() {
-    this.renderer.render(this.scene, this.camera);
+    if (this.postProcessing && this.postProcessing.enabled) {
+      this.postProcessing.render();
+    } else {
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 
   setFog(color, near, far) {
@@ -59,5 +69,6 @@ window.GameRenderer = class GameRenderer {
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    if (this.postProcessing) this.postProcessing.resize(w, h);
   }
 };

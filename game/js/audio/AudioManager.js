@@ -74,6 +74,51 @@ window.AudioManager = class AudioManager {
     if (ambient != null) this.ambientGain.gain.value = ambient;
   }
 
+  playSpatial(name, sourcePos, listenerPos, maxDist) {
+    if (!this.initialized) this.init();
+    const generator = this.sounds[name];
+    if (!generator) return;
+    const dx = sourcePos.x - listenerPos.x;
+    const dz = sourcePos.z - listenerPos.z;
+    const dist = Math.sqrt(dx * dx + dz * dz);
+    if (dist > maxDist) return;
+
+    const panner = this.ctx.createPanner();
+    panner.panningModel = 'HRTF';
+    panner.distanceModel = 'inverse';
+    panner.refDistance = 1;
+    panner.maxDistance = maxDist;
+    panner.rolloffFactor = 1;
+    panner.positionX.value = sourcePos.x;
+    panner.positionY.value = sourcePos.y || 0;
+    panner.positionZ.value = sourcePos.z;
+    panner.connect(this.sfxGain);
+
+    const source = generator(this.ctx, { volume: 1, pitch: 1, loop: false });
+    if (!source) return;
+    source.connect(panner);
+    source.start(0);
+  }
+
+  updateListener(pos, yaw) {
+    if (!this.initialized) return;
+    const listener = this.ctx.listener;
+    if (listener.positionX) {
+      listener.positionX.value = pos.x;
+      listener.positionY.value = pos.y || 0;
+      listener.positionZ.value = pos.z;
+      listener.forwardX.value = Math.sin(yaw);
+      listener.forwardY.value = 0;
+      listener.forwardZ.value = Math.cos(yaw);
+      listener.upX.value = 0;
+      listener.upY.value = 1;
+      listener.upZ.value = 0;
+    } else {
+      listener.setPosition(pos.x, pos.y || 0, pos.z);
+      listener.setOrientation(Math.sin(yaw), 0, Math.cos(yaw), 0, 1, 0);
+    }
+  }
+
   mute() {
     if (!this.initialized) this.init();
     this.masterGain.gain.value = 0;
