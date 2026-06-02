@@ -9,27 +9,44 @@ window.PowerPlant = class PowerPlant extends window.Location {
   }
 
   buildInterior() {
-    // Control room partition
-    this.addPartition(-5, 5, 20, true);
-    this.addPartition(-16, 5, 14, false);
+    // Large coolant/pressure tanks
+    this.addIndustrialTank(-28, -25, 1.2, 5.0, 0x445577);
+    this.addIndustrialTank(-20, -25, 1.0, 4.2, 0x334466);
+    this.addIndustrialTank(22, -25, 1.2, 5.0, 0x445577);
+    this.addIndustrialTank(14, -25, 0.9, 3.5, 0x334466);
 
-    // Engineer workstations
-    [[-10, 8, 0],[-10, 2, 0],[-10, -4, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9, 8],[-9, 2],[-9,-4],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, 5, 4, 0);
+    // Pipe networks at mid-height
+    this.addWallPipes(-31, 0, 65, 0x5566aa);
+    this.addWallPipes(31, 0, 65, 0x5566aa);
+    this.addPipeRun(0, 3.5, -20, 50, true, 0x8899bb);
+    this.addPipeRun(0, 2.8, -20, 50, true, 0x6677aa);
 
-    // Safety monitoring desk near entrance
-    const smDesk = this.loader.createDesk(0x444455);
-    smDesk.position.set(0, 0, 28);
-    this.scene.add(smDesk);
-    this.meshes.push(smDesk);
-    const smMon = this.loader.createMonitor();
-    smMon.position.set(0, 0.78, 27.7);
-    smMon.rotation.y = Math.PI;
-    this.scene.add(smMon);
-    this.meshes.push(smMon);
+    // Conveyors (maintenance catwalks simulated)
+    this.addConveyor(-10, 10, 10, 0);
+    this.addConveyor(10, 10, 10, 0);
+
+    // Barrels of oil/chemicals
+    this.addBarrels(-25, 15, 6, 0.7);
+    this.addBarrels(18, 15, 5, 0.7);
+
+    // Control panels
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(-28, 10, Math.PI / 2);
+    this.addControlPanel(26, 10, -Math.PI / 2);
+
+    // Control room (small admin area)
+    this.addPartition(-5, 8, 16, true);
+    this.addPartition(-14, 8, 10, false);
+    [[-10,10,0],[-10,4,0],[-20,10,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,10],[-9,4],[-19,10]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, 6, 3, 0);
+
+    // Safety desk at entrance
+    const sd = this.loader.createDesk(0x444455);
+    sd.position.set(0, 0, 28); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 27.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {

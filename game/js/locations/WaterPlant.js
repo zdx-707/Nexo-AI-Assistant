@@ -9,27 +9,38 @@ window.WaterPlant = class WaterPlant extends window.Location {
   }
 
   buildInterior() {
-    // Monitoring room
-    this.addPartition(-5, 0, 16, false);
-    this.addPartition(-5, 0, 10, true);
+    // Water storage tanks
+    this.addIndustrialTank(-18, -18, 1.1, 4.0, 0x3366aa);
+    this.addIndustrialTank(-10, -18, 0.9, 3.2, 0x2255aa);
+    this.addIndustrialTank(12, -18, 1.1, 4.0, 0x3366aa);
 
-    // Water engineer desks
-    [[-10, 2, 0],[-10, -4, 0],[-16, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9, 2],[-9,-4],[-15, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Pump pipe networks
+    this.addWallPipes(-23, 0, 50, 0x2255aa);
+    this.addWallPipes(23, 0, 50, 0x2255aa);
+    this.addPipeRun(0, 2.5, -10, 40, true, 0x3366bb);
+
+    // Chemical barrels (treatment)
+    this.addBarrels(-18, 8, 4, 0.65);
+    this.addBarrels(12, 8, 4, 0.65);
+
+    // Control panels
+    this.addControlPanel(-20, -5, Math.PI / 2);
+    this.addControlPanel(18, -5, -Math.PI / 2);
+    this.addControlPanel(0, -21, 0);
+
+    // Monitoring room
+    this.addPartition(-5, 0, 14, false);
+    this.addPartition(-5, 0, 8, true);
+    [[-10,2,0],[-10,-4,0],[-16,2,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,2],[-9,-4],[-15,2]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-20, -4, 3, 0);
 
-    // Entrance security desk
-    const eDesk = this.loader.createDesk(0x2a4050);
-    eDesk.position.set(0, 0, 20);
-    this.scene.add(eDesk);
-    this.meshes.push(eDesk);
-    const eMon = this.loader.createMonitor();
-    eMon.position.set(0, 0.78, 19.7);
-    eMon.rotation.y = Math.PI;
-    this.scene.add(eMon);
-    this.meshes.push(eMon);
+    // Security desk
+    const ed = this.loader.createDesk(0x2a4050);
+    ed.position.set(0, 0, 20); this.scene.add(ed); this.meshes.push(ed);
+    const em = this.loader.createMonitor();
+    em.position.set(0, 0.78, 19.7); em.rotation.y = Math.PI;
+    this.scene.add(em); this.meshes.push(em);
   }
 
   build() {

@@ -9,18 +9,29 @@ window.CommCenter = class CommCenter extends window.Location {
   }
 
   buildInterior() {
-    // Operations room divider
-    this.addPartition(-5, 0, 20, false);
-    this.addPartition(-5, 0, 12, true);
+    // Server stacks with pipe cooling runs overhead
+    this.addWallPipes(-23, 0, 50, 0x226688);
+    this.addWallPipes(23, 0, 50, 0x226688);
+    this.addPipeRun(0, 4.0, -15, 40, true, 0x3388aa);
 
-    // Operator workstations
-    [[-12, -5, 0],[-12, -12, 0],[-12, -19, 0],[-18, -5, Math.PI],[-18, -12, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-11,-5],[-11,-12],[-11,-19],[-17,-5],[-17,-12]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Equipment crates / battery banks
+    this.addStorageCrates(-20, -18, 2, 3);
+    this.addStorageCrates(16, -18, 2, 3);
 
-    // Filing area
-    this.addFilingCabinets(-22, -18, 4, 0);
+    // Barrels (coolant)
+    this.addBarrels(-20, 10, 4, 0.65);
+    this.addBarrels(14, 10, 4, 0.65);
+
+    // Control panels along back wall
+    this.addControlPanel(-12, -22, 0);
+    this.addControlPanel(0, -22, 0);
+    this.addControlPanel(12, -22, 0);
+
+    // Operations room (small)
+    this.addPartition(-5, 0, 18, false);
+    this.addPartition(-5, 0, 10, true);
+    [[-12,-5,0],[-12,-12,0],[-18,-5,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-11,-5],[-11,-12],[-17,-5]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-22, -5, 3, 0);
 
     // Supervisor desk

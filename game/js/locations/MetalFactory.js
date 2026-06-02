@@ -9,25 +9,45 @@ window.MetalFactory = class MetalFactory extends window.Location {
   }
 
   buildInterior() {
-    // Admin corridor left
-    this.addPartition(-8, -5, 20, false);
-    this.addPartition(-8, -5, 14, true);
+    // Smelting/processing tanks
+    this.addIndustrialTank(-22, -22, 1.1, 4.5, 0x884422);
+    this.addIndustrialTank(-14, -22, 0.9, 3.5, 0x773311);
+    this.addIndustrialTank(16, -22, 1.1, 4.5, 0x884422);
 
-    // Admin desks
-    [[-14, -8, 0],[-14, -14, 0],[-20, -8, Math.PI],[-20, -14, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-13,-8],[-13,-14],[-19,-8],[-19,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Metal stock crates
+    this.addStorageCrates(-24, 8, 3, 4);
+    this.addStorageCrates(-24, 18, 2, 3);
+    this.addStorageCrates(18, 8, 3, 4);
+
+    // Conveyor belts (metal processing)
+    this.addConveyor(-4, 5, 14, 0);
+    this.addConveyor(4, 5, 14, 0);
+    this.addConveyor(0, -8, 14, 0);
+
+    // Wall pipe conduits
+    this.addWallPipes(-28, 0, 60, 0x775533);
+    this.addWallPipes(28, 0, 60, 0x775533);
+
+    // Control panels
+    this.addControlPanel(-26, 0, Math.PI / 2);
+    this.addControlPanel(24, 0, -Math.PI / 2);
+    this.addControlPanel(0, -25, 0);
+
+    // Barrels (lubricants/chemicals)
+    this.addBarrels(-20, 0, 4, 0.65);
+    this.addBarrels(14, 0, 4, 0.65);
+
+    // Admin room
+    this.addPartition(-8, -5, 18, false);
+    this.addPartition(-8, -5, 12, true);
+    [[-14,-8,0],[-14,-14,0],[-20,-8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-13,-8],[-13,-14],[-19,-8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-25, -8, 3, 0);
 
-    // Quality control station
+    // QC station
     this.addDesk(18, 20, Math.PI);
     this.addEmployee(17, 20, Math.PI);
-    const qMon = this.loader.createMonitor();
-    qMon.position.set(18, 0.78, 19.7);
-    qMon.rotation.y = Math.PI;
-    this.scene.add(qMon);
-    this.meshes.push(qMon);
+    this.addControlPanel(22, 20, -Math.PI / 2);
   }
 
   build() {

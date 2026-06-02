@@ -506,6 +506,137 @@ window.AssetLoader = class AssetLoader {
     return mesh;
   }
 
+  // ── Industrial Props ─────────────────────────────────────
+  createIndustrialTank(r = 0.9, h = 3.0, color = 0x557799) {
+    const g = new THREE.Group();
+    const body = this.createCylinder(r, r, h, 16, color);
+    body.position.set(0, h / 2, 0);
+    g.add(body);
+    const domeGeo = new THREE.SphereGeometry(r, 16, 8, 0, Math.PI * 2, 0, Math.PI * 0.55);
+    const domeMat = new THREE.MeshPhongMaterial({ color: color });
+    const dome = new THREE.Mesh(domeGeo, domeMat);
+    dome.castShadow = true;
+    dome.position.set(0, h, 0);
+    g.add(dome);
+    const nozzle = this.createCylinder(0.08, 0.08, 0.45, 8, 0x888888);
+    nozzle.position.set(r * 0.75, h * 0.35, 0);
+    nozzle.rotation.z = Math.PI / 2;
+    g.add(nozzle);
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2;
+      const leg = this.createCylinder(0.06, 0.06, 0.65, 6, 0x555555);
+      leg.position.set(Math.cos(a) * r * 0.72, 0.32, Math.sin(a) * r * 0.72);
+      g.add(leg);
+    }
+    [h * 0.2, h * 0.5, h * 0.8].forEach(y => {
+      const band = this.createCylinder(r + 0.03, r + 0.03, 0.06, 16, 0x666666);
+      band.position.set(0, y, 0);
+      g.add(band);
+    });
+    return g;
+  }
+
+  createStorageCrate(color = 0x8b6914) {
+    const g = new THREE.Group();
+    const body = this.createBox(0.9, 0.8, 0.9, color);
+    body.position.set(0, 0.4, 0);
+    g.add(body);
+    const straps = [
+      [0, 0.2, 0.46], [0, 0.6, 0.46], [0.46, 0.2, 0], [0.46, 0.6, 0],
+    ];
+    straps.forEach(([x, y, z]) => {
+      const s = this.createBox(x ? 0.02 : 0.94, 0.04, z ? 0.02 : 0.94, 0x5a3e10);
+      s.position.set(x, y, z);
+      g.add(s);
+    });
+    return g;
+  }
+
+  createIndustrialBarrel(color = 0x443322) {
+    const g = new THREE.Group();
+    const body = this.createCylinder(0.26, 0.26, 0.88, 12, color);
+    body.position.set(0, 0.44, 0);
+    g.add(body);
+    [0.2, 0.44, 0.68].forEach(y => {
+      const ring = this.createCylinder(0.285, 0.285, 0.04, 12, 0x888888);
+      ring.position.set(0, y, 0);
+      g.add(ring);
+    });
+    const lid = this.createCylinder(0.27, 0.27, 0.03, 12, 0x666666);
+    lid.position.set(0, 0.89, 0);
+    g.add(lid);
+    return g;
+  }
+
+  createConveyorBelt(length = 4.0) {
+    const g = new THREE.Group();
+    const belt = this.createBox(length, 0.08, 0.9, 0x1a1a1a);
+    belt.position.set(0, 0.65, 0);
+    g.add(belt);
+    [-0.47, 0.47].forEach(z => {
+      const rail = this.createBox(length, 0.1, 0.05, 0x555555);
+      rail.position.set(0, 0.74, z);
+      g.add(rail);
+    });
+    const cnt = Math.max(2, Math.floor(length / 0.55));
+    for (let i = 0; i <= cnt; i++) {
+      const roller = this.createCylinder(0.08, 0.08, 0.94, 8, 0x777788);
+      roller.position.set(-length / 2 + i * (length / cnt), 0.61, 0);
+      roller.rotation.z = Math.PI / 2;
+      g.add(roller);
+    }
+    [-length / 2 + 0.4, length / 2 - 0.4].forEach(x => {
+      [-0.32, 0.32].forEach(z => {
+        const leg = this.createBox(0.06, 0.58, 0.06, 0x444444);
+        leg.position.set(x, 0.29, z);
+        g.add(leg);
+      });
+    });
+    return g;
+  }
+
+  createControlPanel() {
+    const g = new THREE.Group();
+    const body = this.createBox(1.4, 1.6, 0.4, 0x222233);
+    body.position.set(0, 0.8, 0);
+    g.add(body);
+    const screen = this.createBox(1.0, 0.56, 0.04, 0x111122);
+    screen.position.set(0, 1.22, 0.22);
+    g.add(screen);
+    const screenTex = this._makeScreenTex();
+    const glowGeo = new THREE.BoxGeometry(0.96, 0.52, 0.01);
+    const glowMat = new THREE.MeshStandardMaterial({
+      map: screenTex, emissiveMap: screenTex,
+      emissive: new THREE.Color(1, 1, 1), emissiveIntensity: 0.8,
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.set(0, 1.22, 0.245);
+    g.add(glow);
+    const btnColors = [0x00ff00, 0xff2200, 0xff8800, 0x0088ff, 0xffff00];
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 5; c++) {
+        const btn = this.createBox(0.1, 0.1, 0.04, btnColors[(r * 5 + c) % 5]);
+        btn.position.set(-0.28 + c * 0.14, 0.5 + r * 0.14, 0.22);
+        g.add(btn);
+      }
+    }
+    return g;
+  }
+
+  createPipeRun(length = 4.0, r = 0.12, color = 0x888888) {
+    const g = new THREE.Group();
+    const pipe = this.createCylinder(r, r, length, 10, color);
+    pipe.rotation.z = Math.PI / 2;
+    g.add(pipe);
+    [-length / 2, length / 2].forEach(x => {
+      const cap = this.createCylinder(r + 0.03, r + 0.03, 0.06, 10, 0x555555);
+      cap.rotation.z = Math.PI / 2;
+      cap.position.set(x, 0, 0);
+      g.add(cap);
+    });
+    return g;
+  }
+
   createFloor(width, depth, color) {
     const geo = new THREE.PlaneGeometry(width, depth);
     const mat = new THREE.MeshLambertMaterial({ color: color });

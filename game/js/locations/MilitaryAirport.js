@@ -9,27 +9,48 @@ window.MilitaryAirport = class MilitaryAirport extends window.Location {
   }
 
   buildInterior() {
-    // Control tower office
-    this.addPartition(30, -10, 20, false);
-    this.addPartition(30, -10, 16, true);
+    // Fuel storage tanks (large)
+    this.addIndustrialTank(-40, -30, 1.5, 5.0, 0x553300);
+    this.addIndustrialTank(-30, -30, 1.2, 4.0, 0x664400);
+    this.addIndustrialTank(35, -30, 1.5, 5.0, 0x553300);
+    this.addIndustrialTank(25, -30, 1.2, 4.0, 0x664400);
 
-    // ATC workstations
-    [[35, -14, 0],[35, -20, 0],[42, -14, Math.PI],[42, -20, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[36,-14],[36,-20],[43,-14],[43,-20]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Fuel pipe runs
+    this.addWallPipes(-48, 0, 80, 0x886633);
+    this.addWallPipes(48, 0, 80, 0x886633);
+    this.addPipeRun(0, 3.0, -15, 80, true, 0xaa8844);
+
+    // Equipment & weapons crates
+    this.addStorageCrates(-40, 10, 3, 4);
+    this.addStorageCrates(-40, 20, 2, 4);
+    this.addStorageCrates(34, 10, 3, 4);
+
+    // Barrel clusters
+    this.addBarrels(-35, 5, 5, 0.7);
+    this.addBarrels(30, 5, 5, 0.7);
+
+    // Control panels (maintenance stations)
+    this.addControlPanel(-40, -5, Math.PI / 2);
+    this.addControlPanel(38, -5, -Math.PI / 2);
+    this.addControlPanel(0, -32, 0);
+
+    // Conveyors (cargo handling)
+    this.addConveyor(-10, 5, 14, 0);
+    this.addConveyor(10, 5, 14, 0);
+
+    // ATC control tower
+    this.addPartition(30, -10, 20, false);
+    this.addPartition(30, -10, 14, true);
+    [[35,-14,0],[35,-20,0],[42,-14,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[36,-14],[36,-20],[43,-14]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(46, -10, 3, 0);
 
-    // Security checkpoint near entrance
-    const sDesk = this.loader.createDesk(0x3a3a2a);
-    sDesk.position.set(0, 0, 32);
-    this.scene.add(sDesk);
-    this.meshes.push(sDesk);
-    const sMon = this.loader.createMonitor();
-    sMon.position.set(0, 0.78, 31.7);
-    sMon.rotation.y = Math.PI;
-    this.scene.add(sMon);
-    this.meshes.push(sMon);
+    // Security checkpoint
+    const sd = this.loader.createDesk(0x3a3a2a);
+    sd.position.set(0, 0, 32); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 31.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {

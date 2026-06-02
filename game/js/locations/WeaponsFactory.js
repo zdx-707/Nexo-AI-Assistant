@@ -9,36 +9,49 @@ window.WeaponsFactory = class WeaponsFactory extends window.Location {
   }
 
   buildInterior() {
-    // Office wing partition (left side)
+    // Conveyor assembly lines
+    this.addConveyor(-6, 5, 14, 0);
+    this.addConveyor(6, 5, 14, 0);
+    this.addConveyor(-6, -8, 14, 0);
+    this.addConveyor(6, -8, 14, 0);
+
+    // Storage tanks
+    this.addIndustrialTank(-28, -24, 1.0, 3.5, 0x445566);
+    this.addIndustrialTank(-22, -24, 0.8, 2.8, 0x334455);
+    this.addIndustrialTank(24, -24, 1.0, 3.5, 0x554433);
+
+    // Weapons crates stacked along walls
+    this.addStorageCrates(-28, 10, 3, 3);
+    this.addStorageCrates(-28, 18, 2, 3);
+    this.addStorageCrates(22, 10, 3, 3);
+    this.addStorageCrates(22, 18, 2, 2);
+
+    // Propellant barrels
+    this.addBarrels(-15, -28, 5);
+    this.addBarrels(8, -28, 5);
+
+    // Wall pipes
+    this.addWallPipes(-33, 0, 60, 0x5566aa);
+    this.addWallPipes(33, 0, 60, 0x5566aa);
+
+    // Control panels
+    this.addControlPanel(-24, 0, Math.PI / 2);
+    this.addControlPanel(22, 0, -Math.PI / 2);
+    this.addControlPanel(0, -28, 0);
+
+    // Admin corner
     this.addPartition(-12, -10, 22, false);
     this.addPartition(-12, -10, 14, true);
+    [[-20,-18,0],[-20,-12,0],[-25,-18,Math.PI]].forEach(([x,z,y]) => this.addDesk(x,z,y));
+    [[-19,-18],[-19,-12],[-24,-18]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-30, -18, 3, 0);
 
-    // Office desks cluster
-    const officeDesks = [
-      [-20, -18, 0], [-20, -12, 0], [-20, -6, 0],
-      [-25, -18, Math.PI], [-25, -12, Math.PI],
-    ];
-    officeDesks.forEach(([x, z, y]) => this.addDesk(x, z, y));
-
-    // Employees at desks
-    [[-19, -18],[-19, -12],[-19, -6],[-24, -18],[-24, -12]].forEach(([x,z]) => {
-      this.addEmployee(x, z, Math.PI);
-    });
-
-    // Filing cabinets
-    this.addFilingCabinets(-30, -18, 4, 0);
-    this.addFilingCabinets(-30, -5, 3, 0);
-
-    // Security desk near entrance
-    const secDesk = this.loader.createDesk(0x444444);
-    secDesk.position.set(0, 0, 25);
-    this.scene.add(secDesk);
-    this.meshes.push(secDesk);
-    const secMon = this.loader.createMonitor();
-    secMon.position.set(0, 0.78, 24.7);
-    secMon.rotation.y = Math.PI;
-    this.scene.add(secMon);
-    this.meshes.push(secMon);
+    // Security desk at entrance
+    const sd = this.loader.createDesk(0x444444);
+    sd.position.set(0, 0, 25); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 24.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {

@@ -9,33 +9,45 @@ window.CommandCenter = class CommandCenter extends window.Location {
   }
 
   buildInterior() {
-    // Briefing room
-    this.addPartition(0, -5, 24, true);
-    this.addPartition(0, -5, 16, false);
+    // Equipment crates & military hardware
+    this.addStorageCrates(-30, -25, 4, 4);
+    this.addStorageCrates(24, -25, 4, 3);
+    this.addBarrels(-28, 10, 5, 0.7);
+    this.addBarrels(24, 10, 5, 0.7);
 
-    // Strategy desks
-    [[-8, -12, 0],[-8, -18, 0],[-8, -24, 0],[-15, -12, Math.PI],[-15, -18, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-7,-12],[-7,-18],[-7,-24],[-14,-12],[-14,-18]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Tactical display / control panels
+    this.addControlPanel(-20, -28, 0);
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(20, -28, 0);
+    this.addControlPanel(-30, 0, Math.PI / 2);
+    this.addControlPanel(28, 0, -Math.PI / 2);
+
+    // Wall pipe conduits
+    this.addWallPipes(-34, 0, 70, 0x334455);
+    this.addWallPipes(34, 0, 70, 0x334455);
+
+    // Conveyor (equipment logistics)
+    this.addConveyor(0, -15, 18, 0);
+
+    // Ops room
+    this.addPartition(0, -5, 24, true);
+    this.addPartition(0, -5, 14, false);
+    [[-8,-12,0],[-8,-18,0],[-15,-12,Math.PI],[-15,-18,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-7,-12],[-7,-18],[-14,-12],[-14,-18]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
 
     // General's office
-    this.addPartition(15, -5, 16, false);
-    this.addPartition(15, -21, 16, true);
-    this.addDesk(22, -13, Math.PI);
-    this.addEmployee(21, -13, Math.PI);
+    this.addPartition(15, -5, 14, false);
+    this.addPartition(15, -19, 14, true);
+    this.addDesk(22, -12, Math.PI);
+    this.addEmployee(21, -12, Math.PI);
     this.addFilingCabinets(28, -8, 4, 0);
 
     // Guard post at entrance
-    const gDesk = this.loader.createDesk(0x333355);
-    gDesk.position.set(0, 0, 28);
-    this.scene.add(gDesk);
-    this.meshes.push(gDesk);
-    const gMon = this.loader.createMonitor();
-    gMon.position.set(0, 0.78, 27.7);
-    gMon.rotation.y = Math.PI;
-    this.scene.add(gMon);
-    this.meshes.push(gMon);
+    const gd = this.loader.createDesk(0x333355);
+    gd.position.set(0, 0, 28); this.scene.add(gd); this.meshes.push(gd);
+    const gm = this.loader.createMonitor();
+    gm.position.set(0, 0.78, 27.7); gm.rotation.y = Math.PI;
+    this.scene.add(gm); this.meshes.push(gm);
   }
 
   build() {

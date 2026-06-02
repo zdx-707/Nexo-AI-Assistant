@@ -9,18 +9,42 @@ window.OilRefinery = class OilRefinery extends window.Location {
   }
 
   buildInterior() {
-    // Process control room
-    this.addPartition(-5, -5, 22, true);
-    this.addPartition(-16, -5, 12, false);
+    // Massive storage tanks (oil/gas)
+    this.addIndustrialTank(-30, -30, 1.4, 6.0, 0x553300);
+    this.addIndustrialTank(-20, -30, 1.2, 5.0, 0x664400);
+    this.addIndustrialTank(22, -30, 1.4, 6.0, 0x553300);
+    this.addIndustrialTank(12, -30, 1.0, 4.0, 0x664400);
+    this.addIndustrialTank(-30, 15, 1.0, 4.0, 0x774411);
+    this.addIndustrialTank(28, 15, 1.0, 4.0, 0x774411);
 
-    // Operator stations
-    [[-10, -8, 0],[-10, -14, 0],[-10, -20, 0],[-22, -8, Math.PI],[-22, -14, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9,-8],[-9,-14],[-9,-20],[-21,-8],[-21,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, -8, 4, 0);
+    // Pipeline networks
+    this.addWallPipes(-36, 0, 75, 0x886633);
+    this.addWallPipes(36, 0, 75, 0x886633);
+    this.addPipeRun(0, 4.0, -15, 60, true, 0xaa8844);
+    this.addPipeRun(0, 2.5, -15, 60, true, 0x886633);
 
-    // Safety inspector desk
+    // Barrel clusters (chemical by-products)
+    this.addBarrels(-25, 5, 6, 0.7);
+    this.addBarrels(-25, 10, 5, 0.7);
+    this.addBarrels(20, 5, 6, 0.7);
+
+    // Processing conveyors
+    this.addConveyor(0, 5, 16, 0);
+    this.addConveyor(0, -5, 16, 0);
+
+    // Control panels
+    this.addControlPanel(0, -32, 0);
+    this.addControlPanel(-32, 0, Math.PI / 2);
+    this.addControlPanel(30, 0, -Math.PI / 2);
+
+    // Small process control room
+    this.addPartition(-5, -5, 20, true);
+    this.addPartition(-15, -5, 10, false);
+    [[-10,-8,0],[-10,-14,0],[-20,-8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,-8],[-9,-14],[-19,-8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, -8, 3, 0);
+
+    // Safety desk
     this.addDesk(20, 20, Math.PI);
     this.addEmployee(19, 20, Math.PI);
   }

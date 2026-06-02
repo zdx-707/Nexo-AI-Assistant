@@ -653,13 +653,16 @@ function loadLocation(locId) {
   const patrolSys = new PatrolSystem();
   patrolSys.assignRoutes(GAME.currentLocation.guards, locId);
 
-  // Spawn player inside (center of building)
-  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, 0);
+  // Spawn player outside, facing into building
+  const _loc = GAME.currentLocation;
+  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, _loc.depth / 2 + 4);
   GAME.player = new Player(GAME.scene, GAME.camera);
   GAME.player.inventory = new Inventory();
   GAME.player.disguise = new Disguise(GAME.player);
   GAME.player.animator = new PlayerAnimator(GAME.camera);
   GAME.player.reset(spawnPos);
+  GAME.player.yaw = Math.PI;
+  GAME.player.camera.rotation.set(0, Math.PI, 0, 'YXZ');
 
   // Drone fleet
   GAME.droneFleet = new DroneFleet(GAME.scene);

@@ -627,62 +627,71 @@ body {
   pointer-events: none;
 }
 
+/* Left 46%: joystick zone */
 #joy-zone {
   position: absolute;
   left: 0; bottom: 0;
-  width: 45%; height: 60%;
+  width: 46%; height: 68%;
   pointer-events: auto;
   touch-action: none;
+  /* subtle guide */
+  background: radial-gradient(ellipse at 40% 80%, rgba(0,255,204,0.03) 0%, transparent 70%);
 }
 
+/* Right 54% top portion: look zone */
 #look-zone {
   position: absolute;
   right: 0; top: 0;
-  width: 55%; height: 100%;
+  width: 54%; height: 65%;
   pointer-events: auto;
   touch-action: none;
+  background: radial-gradient(ellipse at 60% 30%, rgba(100,100,255,0.03) 0%, transparent 70%);
 }
 
 #joy-base {
   position: absolute;
-  width: 96px; height: 96px;
+  width: 108px; height: 108px;
   border-radius: 50%;
-  background: rgba(0,255,204,0.08);
-  border: 2px solid rgba(0,255,204,0.3);
-  opacity: 0.4;
+  background: rgba(0,255,204,0.06);
+  border: 2px solid rgba(0,255,204,0.35);
+  opacity: 0.35;
   transition: opacity 0.15s;
   pointer-events: none;
+  box-shadow: 0 0 20px rgba(0,255,204,0.1) inset;
 }
 
 #joy-thumb {
   position: absolute;
   top: 50%; left: 50%;
-  width: 44px; height: 44px;
-  margin: -22px 0 0 -22px;
+  width: 52px; height: 52px;
+  margin: -26px 0 0 -26px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,255,204,0.5), rgba(0,255,204,0.15));
-  border: 2px solid rgba(0,255,204,0.6);
-  box-shadow: 0 0 16px rgba(0,255,204,0.4);
+  background: radial-gradient(circle, rgba(0,255,204,0.55), rgba(0,255,204,0.12));
+  border: 2px solid rgba(0,255,204,0.7);
+  box-shadow: 0 0 18px rgba(0,255,204,0.45);
   transition: none;
 }
 
+/* Action buttons — bottom right quadrant */
 #touch-btns {
   position: absolute;
-  bottom: 24px; right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  bottom: 20px; right: 14px;
+  display: grid;
+  grid-template-columns: 72px 72px;
+  grid-template-rows: 56px 72px;
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
   pointer-events: auto;
 }
 
 .tbtn {
-  min-width: 64px; min-height: 64px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.25);
-  background: rgba(10,10,30,0.75);
+  background: rgba(8,8,24,0.82);
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   flex-direction: column;
@@ -692,47 +701,55 @@ body {
   touch-action: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.1s, transform 0.1s;
+  transition: background 0.08s, transform 0.08s;
   line-height: 1;
+  backdrop-filter: blur(4px);
 }
 
 .tbtn span {
   font-size: 0.55rem;
   font-weight: 400;
-  opacity: 0.7;
-  margin-top: 2px;
+  opacity: 0.75;
+  margin-top: 3px;
 }
 
-.tbtn.active { transform: scale(0.9); }
+.tbtn.active {
+  transform: scale(0.87);
+  background: rgba(255,255,255,0.1);
+}
 
+/* Up/Down smaller — row 1 */
+.tbtn-space, .tbtn-c {
+  width: 56px; height: 56px;
+  font-size: 1.3rem;
+  border-color: rgba(180,180,255,0.3);
+  color: #ccccff;
+}
+
+/* Action — row 2 */
 .tbtn-e {
-  border-color: rgba(0,255,204,0.5);
+  border-color: rgba(0,255,204,0.55);
   color: #00ffcc;
-  box-shadow: 0 0 12px rgba(0,255,204,0.25);
+  box-shadow: 0 0 14px rgba(0,255,204,0.3);
 }
-.tbtn-e.active { background: rgba(0,255,204,0.2); }
+.tbtn-e.active { background: rgba(0,255,204,0.22); }
 
 .tbtn-f {
-  border-color: rgba(255,170,0,0.5);
+  border-color: rgba(255,170,0,0.55);
   color: #ffaa00;
-  box-shadow: 0 0 12px rgba(255,170,0,0.25);
+  box-shadow: 0 0 14px rgba(255,170,0,0.3);
 }
-.tbtn-f.active { background: rgba(255,170,0,0.2); }
-
-.tbtn-space, .tbtn-c {
-  min-width: 52px; min-height: 52px;
-  font-size: 1.3rem;
-  border-color: rgba(200,200,255,0.3);
-}
+.tbtn-f.active { background: rgba(255,170,0,0.22); }
 
 #tbtn-pause {
   position: absolute;
-  top: 16px; right: 16px;
-  min-width: 48px; min-height: 48px;
-  font-size: 1.2rem;
+  top: 14px; left: 14px;
+  width: 48px; height: 48px;
+  font-size: 1.15rem;
   border-color: rgba(150,150,200,0.4);
   pointer-events: auto;
   z-index: 201;
+  border-radius: 12px;
 }
 
 /* Responsive menus on mobile */
@@ -3180,6 +3197,137 @@ window.AssetLoader = class AssetLoader {
     return mesh;
   }
 
+  // ── Industrial Props ─────────────────────────────────────
+  createIndustrialTank(r = 0.9, h = 3.0, color = 0x557799) {
+    const g = new THREE.Group();
+    const body = this.createCylinder(r, r, h, 16, color);
+    body.position.set(0, h / 2, 0);
+    g.add(body);
+    const domeGeo = new THREE.SphereGeometry(r, 16, 8, 0, Math.PI * 2, 0, Math.PI * 0.55);
+    const domeMat = new THREE.MeshPhongMaterial({ color: color });
+    const dome = new THREE.Mesh(domeGeo, domeMat);
+    dome.castShadow = true;
+    dome.position.set(0, h, 0);
+    g.add(dome);
+    const nozzle = this.createCylinder(0.08, 0.08, 0.45, 8, 0x888888);
+    nozzle.position.set(r * 0.75, h * 0.35, 0);
+    nozzle.rotation.z = Math.PI / 2;
+    g.add(nozzle);
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2;
+      const leg = this.createCylinder(0.06, 0.06, 0.65, 6, 0x555555);
+      leg.position.set(Math.cos(a) * r * 0.72, 0.32, Math.sin(a) * r * 0.72);
+      g.add(leg);
+    }
+    [h * 0.2, h * 0.5, h * 0.8].forEach(y => {
+      const band = this.createCylinder(r + 0.03, r + 0.03, 0.06, 16, 0x666666);
+      band.position.set(0, y, 0);
+      g.add(band);
+    });
+    return g;
+  }
+
+  createStorageCrate(color = 0x8b6914) {
+    const g = new THREE.Group();
+    const body = this.createBox(0.9, 0.8, 0.9, color);
+    body.position.set(0, 0.4, 0);
+    g.add(body);
+    const straps = [
+      [0, 0.2, 0.46], [0, 0.6, 0.46], [0.46, 0.2, 0], [0.46, 0.6, 0],
+    ];
+    straps.forEach(([x, y, z]) => {
+      const s = this.createBox(x ? 0.02 : 0.94, 0.04, z ? 0.02 : 0.94, 0x5a3e10);
+      s.position.set(x, y, z);
+      g.add(s);
+    });
+    return g;
+  }
+
+  createIndustrialBarrel(color = 0x443322) {
+    const g = new THREE.Group();
+    const body = this.createCylinder(0.26, 0.26, 0.88, 12, color);
+    body.position.set(0, 0.44, 0);
+    g.add(body);
+    [0.2, 0.44, 0.68].forEach(y => {
+      const ring = this.createCylinder(0.285, 0.285, 0.04, 12, 0x888888);
+      ring.position.set(0, y, 0);
+      g.add(ring);
+    });
+    const lid = this.createCylinder(0.27, 0.27, 0.03, 12, 0x666666);
+    lid.position.set(0, 0.89, 0);
+    g.add(lid);
+    return g;
+  }
+
+  createConveyorBelt(length = 4.0) {
+    const g = new THREE.Group();
+    const belt = this.createBox(length, 0.08, 0.9, 0x1a1a1a);
+    belt.position.set(0, 0.65, 0);
+    g.add(belt);
+    [-0.47, 0.47].forEach(z => {
+      const rail = this.createBox(length, 0.1, 0.05, 0x555555);
+      rail.position.set(0, 0.74, z);
+      g.add(rail);
+    });
+    const cnt = Math.max(2, Math.floor(length / 0.55));
+    for (let i = 0; i <= cnt; i++) {
+      const roller = this.createCylinder(0.08, 0.08, 0.94, 8, 0x777788);
+      roller.position.set(-length / 2 + i * (length / cnt), 0.61, 0);
+      roller.rotation.z = Math.PI / 2;
+      g.add(roller);
+    }
+    [-length / 2 + 0.4, length / 2 - 0.4].forEach(x => {
+      [-0.32, 0.32].forEach(z => {
+        const leg = this.createBox(0.06, 0.58, 0.06, 0x444444);
+        leg.position.set(x, 0.29, z);
+        g.add(leg);
+      });
+    });
+    return g;
+  }
+
+  createControlPanel() {
+    const g = new THREE.Group();
+    const body = this.createBox(1.4, 1.6, 0.4, 0x222233);
+    body.position.set(0, 0.8, 0);
+    g.add(body);
+    const screen = this.createBox(1.0, 0.56, 0.04, 0x111122);
+    screen.position.set(0, 1.22, 0.22);
+    g.add(screen);
+    const screenTex = this._makeScreenTex();
+    const glowGeo = new THREE.BoxGeometry(0.96, 0.52, 0.01);
+    const glowMat = new THREE.MeshStandardMaterial({
+      map: screenTex, emissiveMap: screenTex,
+      emissive: new THREE.Color(1, 1, 1), emissiveIntensity: 0.8,
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.set(0, 1.22, 0.245);
+    g.add(glow);
+    const btnColors = [0x00ff00, 0xff2200, 0xff8800, 0x0088ff, 0xffff00];
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 5; c++) {
+        const btn = this.createBox(0.1, 0.1, 0.04, btnColors[(r * 5 + c) % 5]);
+        btn.position.set(-0.28 + c * 0.14, 0.5 + r * 0.14, 0.22);
+        g.add(btn);
+      }
+    }
+    return g;
+  }
+
+  createPipeRun(length = 4.0, r = 0.12, color = 0x888888) {
+    const g = new THREE.Group();
+    const pipe = this.createCylinder(r, r, length, 10, color);
+    pipe.rotation.z = Math.PI / 2;
+    g.add(pipe);
+    [-length / 2, length / 2].forEach(x => {
+      const cap = this.createCylinder(r + 0.03, r + 0.03, 0.06, 10, 0x555555);
+      cap.rotation.z = Math.PI / 2;
+      cap.position.set(x, 0, 0);
+      g.add(cap);
+    });
+    return g;
+  }
+
   createFloor(width, depth, color) {
     const geo = new THREE.PlaneGeometry(width, depth);
     const mat = new THREE.MeshLambertMaterial({ color: color });
@@ -3585,8 +3733,13 @@ window.TouchInput = class TouchInput {
     this.lookLast = { x: 0, y: 0 };
     this.dx = 0;
     this.dy = 0;
+    this.lookVelX = 0;
+    this.lookVelY = 0;
     this._pendingPressed = {};
     this._pendingKeys = {};
+    // Scale for small screens
+    this._sensX = 0.0055;
+    this._sensY = 0.004;
     this._buildDOM();
     this._bind();
   }
@@ -3608,7 +3761,6 @@ window.TouchInput = class TouchInput {
     `;
     document.body.appendChild(el);
     this.el = el;
-
     this.joyBase  = el.querySelector('#joy-base');
     this.joyThumb = el.querySelector('#joy-thumb');
     this.joyZone  = el.querySelector('#joy-zone');
@@ -3619,17 +3771,16 @@ window.TouchInput = class TouchInput {
     const jz = this.joyZone;
     const lz = this.lookZone;
 
-    // Joystick
     jz.addEventListener('touchstart', e => {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (this.joystickTouchId === null) {
           this.joystickTouchId = t.identifier;
-          const r = jz.getBoundingClientRect();
           this.joystickOrigin = { x: t.clientX, y: t.clientY };
-          this.joyBase.style.left = (t.clientX - r.left - 48) + 'px';
-          this.joyBase.style.top  = (t.clientY - r.top  - 48) + 'px';
-          this.joyBase.style.opacity = '1';
+          const r = jz.getBoundingClientRect();
+          this.joyBase.style.left = (t.clientX - r.left - 52) + 'px';
+          this.joyBase.style.top  = (t.clientY - r.top  - 52) + 'px';
+          this.joyBase.style.opacity = '0.85';
         }
       }
     }, { passive: false });
@@ -3641,10 +3792,11 @@ window.TouchInput = class TouchInput {
           const dx = t.clientX - this.joystickOrigin.x;
           const dy = t.clientY - this.joystickOrigin.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxR = 44;
-          const clamped = dist > maxR ? maxR / dist : 1;
-          this.joystickPos = { x: dx * clamped, y: dy * clamped };
-          this.joyThumb.style.transform = `translate(${this.joystickPos.x}px, ${this.joystickPos.y}px)`;
+          const maxR = 50;
+          const ratio = dist > maxR ? maxR / dist : 1;
+          this.joystickPos = { x: dx * ratio, y: dy * ratio };
+          this.joyThumb.style.transform =
+            `translate(${this.joystickPos.x}px,${this.joystickPos.y}px)`;
         }
       }
     }, { passive: false });
@@ -3655,20 +3807,22 @@ window.TouchInput = class TouchInput {
           this.joystickTouchId = null;
           this.joystickPos = { x: 0, y: 0 };
           this.joyThumb.style.transform = 'translate(0,0)';
-          this.joyBase.style.opacity = '0.4';
+          this.joyBase.style.opacity = '0.35';
         }
       }
     };
     jz.addEventListener('touchend', endJoy, { passive: false });
     jz.addEventListener('touchcancel', endJoy, { passive: false });
 
-    // Look zone
+    // Look zone — accumulate raw pixel delta, apply sensitivity in apply()
     lz.addEventListener('touchstart', e => {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (this.lookTouchId === null) {
           this.lookTouchId = t.identifier;
           this.lookLast = { x: t.clientX, y: t.clientY };
+          this.lookVelX = 0;
+          this.lookVelY = 0;
         }
       }
     }, { passive: false });
@@ -3677,8 +3831,12 @@ window.TouchInput = class TouchInput {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (t.identifier === this.lookTouchId) {
-          this.dx += (t.clientX - this.lookLast.x);
-          this.dy += (t.clientY - this.lookLast.y);
+          const rawDx = t.clientX - this.lookLast.x;
+          const rawDy = t.clientY - this.lookLast.y;
+          // Cap per-event to prevent huge jumps
+          const cap = 40;
+          this.dx += Math.max(-cap, Math.min(cap, rawDx));
+          this.dy += Math.max(-cap, Math.min(cap, rawDy));
           this.lookLast = { x: t.clientX, y: t.clientY };
         }
       }
@@ -3712,7 +3870,6 @@ window.TouchInput = class TouchInput {
       btn.addEventListener('touchcancel', up, { passive: false });
     });
 
-    // Pause
     document.getElementById('tbtn-pause').addEventListener('touchstart', e => {
       e.preventDefault();
       this._pendingPressed['Escape'] = true;
@@ -3722,28 +3879,33 @@ window.TouchInput = class TouchInput {
   apply(keyboard, mouse) {
     if (!this.active) return;
 
-    // Inject look deltas
-    mouse.dx += this.dx;
-    mouse.dy += this.dy;
+    // Convert pixel deltas → radians using touch sensitivity
+    // mouse.sensitivity is 0.002 (for desktop pointer lock px)
+    // We override here with a larger touch-specific factor
+    const touchFactor = 1 / 0.002;  // cancel out mouse.sensitivity, apply our own
+    mouse.dx += this.dx * this._sensX * touchFactor;
+    mouse.dy += this.dy * this._sensY * touchFactor;
     this.dx = 0;
     this.dy = 0;
 
-    // Inject joystick as WASD
-    const deadzone = 10;
+    // Analog joystick → WASD + sprint at high deflection
+    const deadzone = 8;
+    const maxR = 50;
     const jx = this.joystickPos.x;
     const jy = this.joystickPos.y;
+    const deflection = Math.sqrt(jx * jx + jy * jy);
 
     keyboard.keys['KeyW'] = jy < -deadzone;
     keyboard.keys['KeyS'] = jy >  deadzone;
     keyboard.keys['KeyA'] = jx < -deadzone;
     keyboard.keys['KeyD'] = jx >  deadzone;
+    // Sprint when joystick near max
+    keyboard.keys['ShiftLeft'] = deflection > maxR * 0.75;
 
-    // Inject action keys
+    // Action keys
     for (const k of Object.keys(this._pendingKeys)) {
       keyboard.keys[k] = this._pendingKeys[k];
     }
-
-    // Inject pressed (one-frame)
     for (const k of Object.keys(this._pendingPressed)) {
       keyboard.pressed[k] = true;
     }
@@ -3766,7 +3928,8 @@ window.TouchInput = class TouchInput {
   }
 
   static isMobile() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      window.matchMedia('(pointer: coarse)').matches;
   }
 };
 
@@ -5543,17 +5706,21 @@ window.Location = class Location {
     const w = this.width;
     const d = this.depth;
     const h = this.wallHeight;
+    const DW = 3.5;
+    const DH = 2.8;
 
-    // Floor with tile pattern
+    // Floor
     const floor = this.loader.createFloor(w, d, this.floorColor || CONFIG.COLORS.FLOOR);
     floor.position.set(0, 0, 0);
     this.scene.add(floor);
     this.meshes.push(floor);
 
-    // Walls
+    // Walls — south wall (z=+d/2) split for door opening
     const walls = [
       { s: [w, h, 0.5], p: [0, h / 2, -d / 2] },
-      { s: [w, h, 0.5], p: [0, h / 2, d / 2] },
+      { s: [(w - DW) / 2, h, 0.5], p: [-(w + DW) / 4, h / 2, d / 2] },
+      { s: [(w - DW) / 2, h, 0.5], p: [(w + DW) / 4, h / 2, d / 2] },
+      { s: [DW, h - DH, 0.5], p: [0, DH + (h - DH) / 2, d / 2] },
       { s: [0.5, h, d], p: [-w / 2, h / 2, 0] },
       { s: [0.5, h, d], p: [w / 2, h / 2, 0] },
     ];
@@ -5697,6 +5864,69 @@ window.Location = class Location {
     this.pickups.push(pickup);
   }
 
+  // ── Industrial prop helpers ───────────────────────────────
+  addIndustrialTank(x, z, r = 0.9, h = 3.0, color = 0x557799) {
+    const t = this.loader.createIndustrialTank(r, h, color);
+    t.position.set(x, 0, z);
+    this.scene.add(t);
+    this.meshes.push(t);
+  }
+
+  addStorageCrates(x, z, rows = 2, cols = 2) {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const crate = this.loader.createStorageCrate();
+        crate.position.set(x + c * 1.0, r * 0.82, z);
+        this.scene.add(crate);
+        this.meshes.push(crate);
+      }
+    }
+  }
+
+  addBarrels(x, z, count = 4, spacing = 0.65) {
+    for (let i = 0; i < count; i++) {
+      const barrel = this.loader.createIndustrialBarrel(i % 2 === 0 ? 0x443322 : 0x223344);
+      barrel.position.set(x + i * spacing, 0, z);
+      this.scene.add(barrel);
+      this.meshes.push(barrel);
+    }
+  }
+
+  addConveyor(x, z, length, yaw = 0) {
+    const belt = this.loader.createConveyorBelt(length);
+    belt.position.set(x, 0, z);
+    belt.rotation.y = yaw;
+    this.scene.add(belt);
+    this.meshes.push(belt);
+  }
+
+  addControlPanel(x, z, yaw = 0) {
+    const p = this.loader.createControlPanel();
+    p.position.set(x, 0, z);
+    p.rotation.y = yaw;
+    this.scene.add(p);
+    this.meshes.push(p);
+  }
+
+  addPipeRun(x, y, z, length, horizontal = true, color = 0x888888) {
+    const pipe = this.loader.createPipeRun(length, 0.12, color);
+    pipe.position.set(x, y, z);
+    if (!horizontal) pipe.rotation.y = Math.PI / 2;
+    this.scene.add(pipe);
+    this.meshes.push(pipe);
+  }
+
+  addWallPipes(wx, wz, wallLen, color = 0x666677) {
+    for (let i = 0; i < 3; i++) {
+      const segLen = wallLen * 0.85;
+      const pipe = this.loader.createPipeRun(segLen, 0.08 + i * 0.03, color);
+      pipe.position.set(wx, 1.2 + i * 0.35, wz);
+      if (Math.abs(wx) > Math.abs(wz)) pipe.rotation.y = Math.PI / 2;
+      this.scene.add(pipe);
+      this.meshes.push(pipe);
+    }
+  }
+
   update(dt) {
     // Idle employee animation
     if (this._employees) {
@@ -5776,36 +6006,49 @@ window.WeaponsFactory = class WeaponsFactory extends window.Location {
   }
 
   buildInterior() {
-    // Office wing partition (left side)
+    // Conveyor assembly lines
+    this.addConveyor(-6, 5, 14, 0);
+    this.addConveyor(6, 5, 14, 0);
+    this.addConveyor(-6, -8, 14, 0);
+    this.addConveyor(6, -8, 14, 0);
+
+    // Storage tanks
+    this.addIndustrialTank(-28, -24, 1.0, 3.5, 0x445566);
+    this.addIndustrialTank(-22, -24, 0.8, 2.8, 0x334455);
+    this.addIndustrialTank(24, -24, 1.0, 3.5, 0x554433);
+
+    // Weapons crates stacked along walls
+    this.addStorageCrates(-28, 10, 3, 3);
+    this.addStorageCrates(-28, 18, 2, 3);
+    this.addStorageCrates(22, 10, 3, 3);
+    this.addStorageCrates(22, 18, 2, 2);
+
+    // Propellant barrels
+    this.addBarrels(-15, -28, 5);
+    this.addBarrels(8, -28, 5);
+
+    // Wall pipes
+    this.addWallPipes(-33, 0, 60, 0x5566aa);
+    this.addWallPipes(33, 0, 60, 0x5566aa);
+
+    // Control panels
+    this.addControlPanel(-24, 0, Math.PI / 2);
+    this.addControlPanel(22, 0, -Math.PI / 2);
+    this.addControlPanel(0, -28, 0);
+
+    // Admin corner
     this.addPartition(-12, -10, 22, false);
     this.addPartition(-12, -10, 14, true);
+    [[-20,-18,0],[-20,-12,0],[-25,-18,Math.PI]].forEach(([x,z,y]) => this.addDesk(x,z,y));
+    [[-19,-18],[-19,-12],[-24,-18]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-30, -18, 3, 0);
 
-    // Office desks cluster
-    const officeDesks = [
-      [-20, -18, 0], [-20, -12, 0], [-20, -6, 0],
-      [-25, -18, Math.PI], [-25, -12, Math.PI],
-    ];
-    officeDesks.forEach(([x, z, y]) => this.addDesk(x, z, y));
-
-    // Employees at desks
-    [[-19, -18],[-19, -12],[-19, -6],[-24, -18],[-24, -12]].forEach(([x,z]) => {
-      this.addEmployee(x, z, Math.PI);
-    });
-
-    // Filing cabinets
-    this.addFilingCabinets(-30, -18, 4, 0);
-    this.addFilingCabinets(-30, -5, 3, 0);
-
-    // Security desk near entrance
-    const secDesk = this.loader.createDesk(0x444444);
-    secDesk.position.set(0, 0, 25);
-    this.scene.add(secDesk);
-    this.meshes.push(secDesk);
-    const secMon = this.loader.createMonitor();
-    secMon.position.set(0, 0.78, 24.7);
-    secMon.rotation.y = Math.PI;
-    this.scene.add(secMon);
-    this.meshes.push(secMon);
+    // Security desk at entrance
+    const sd = this.loader.createDesk(0x444444);
+    sd.position.set(0, 0, 25); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 24.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {
@@ -5946,34 +6189,42 @@ window.CentralBank = class CentralBank extends window.Location {
   }
 
   buildInterior() {
-    // Teller counter wing
-    this.addPartition(-5, 5, 18, true);
-    this.addPartition(-14, 5, 10, false);
+    // Vault server room: stacked crates & control panels
+    this.addStorageCrates(-22, -20, 3, 4);
+    this.addStorageCrates(18, -20, 3, 3);
+    this.addControlPanel(-20, -5, Math.PI / 2);
+    this.addControlPanel(18, -5, -Math.PI / 2);
+    this.addControlPanel(0, -22, 0);
 
-    // Teller desks
-    [[-10, 8, 0], [-10, 2, 0], [-10, -4, 0]].forEach(([x,z,y]) => this.addDesk(x, z, y));
-    [[-9, 8],[-9, 2],[-9, -4]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Security cage (partition walls)
+    this.addPartition(-8, -8, 14, true);
+    this.addPartition(-8, -22, 14, true);
+    this.addPartition(-8, -8, 14, false);
+    this.addPartition(6, -8, 14, false);
 
-    // Waiting area chairs (no desks)
-    this.addPartition(10, -5, 14, false);
+    // Cash processing barrels (coolant)
+    this.addBarrels(-20, 10, 4, 0.7);
+    this.addBarrels(14, 10, 4, 0.7);
+
+    // Teller wing (small office area)
+    this.addPartition(-5, 5, 16, true);
+    this.addPartition(-13, 5, 8, false);
+    [[-10,8,0],[-10,2,0]].forEach(([x,z,y]) => this.addDesk(x,z,y));
+    [[-9,8],[-9,2]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-22, 5, 3, 0);
 
     // Manager's office
-    this.addPartition(8, 10, 12, true);
-    this.addPartition(8, 10, 8, false);
+    this.addPartition(8, 10, 10, true);
+    this.addPartition(8, 10, 7, false);
     this.addDesk(14, 14, Math.PI);
     this.addEmployee(13, 14, Math.PI);
-    this.addFilingCabinets(18, 10, 3, 0);
 
-    // Security station near entrance
-    const sDesk = this.loader.createDesk(0x5a4010);
-    sDesk.position.set(0, 0, 22);
-    this.scene.add(sDesk);
-    this.meshes.push(sDesk);
-    const sMon = this.loader.createMonitor();
-    sMon.position.set(0, 0.78, 21.7);
-    sMon.rotation.y = Math.PI;
-    this.scene.add(sMon);
-    this.meshes.push(sMon);
+    // Security desk at entrance
+    const sd = this.loader.createDesk(0x5a4010);
+    sd.position.set(0, 0, 22); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 21.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {
@@ -6126,27 +6377,44 @@ window.PowerPlant = class PowerPlant extends window.Location {
   }
 
   buildInterior() {
-    // Control room partition
-    this.addPartition(-5, 5, 20, true);
-    this.addPartition(-16, 5, 14, false);
+    // Large coolant/pressure tanks
+    this.addIndustrialTank(-28, -25, 1.2, 5.0, 0x445577);
+    this.addIndustrialTank(-20, -25, 1.0, 4.2, 0x334466);
+    this.addIndustrialTank(22, -25, 1.2, 5.0, 0x445577);
+    this.addIndustrialTank(14, -25, 0.9, 3.5, 0x334466);
 
-    // Engineer workstations
-    [[-10, 8, 0],[-10, 2, 0],[-10, -4, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9, 8],[-9, 2],[-9,-4],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, 5, 4, 0);
+    // Pipe networks at mid-height
+    this.addWallPipes(-31, 0, 65, 0x5566aa);
+    this.addWallPipes(31, 0, 65, 0x5566aa);
+    this.addPipeRun(0, 3.5, -20, 50, true, 0x8899bb);
+    this.addPipeRun(0, 2.8, -20, 50, true, 0x6677aa);
 
-    // Safety monitoring desk near entrance
-    const smDesk = this.loader.createDesk(0x444455);
-    smDesk.position.set(0, 0, 28);
-    this.scene.add(smDesk);
-    this.meshes.push(smDesk);
-    const smMon = this.loader.createMonitor();
-    smMon.position.set(0, 0.78, 27.7);
-    smMon.rotation.y = Math.PI;
-    this.scene.add(smMon);
-    this.meshes.push(smMon);
+    // Conveyors (maintenance catwalks simulated)
+    this.addConveyor(-10, 10, 10, 0);
+    this.addConveyor(10, 10, 10, 0);
+
+    // Barrels of oil/chemicals
+    this.addBarrels(-25, 15, 6, 0.7);
+    this.addBarrels(18, 15, 5, 0.7);
+
+    // Control panels
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(-28, 10, Math.PI / 2);
+    this.addControlPanel(26, 10, -Math.PI / 2);
+
+    // Control room (small admin area)
+    this.addPartition(-5, 8, 16, true);
+    this.addPartition(-14, 8, 10, false);
+    [[-10,10,0],[-10,4,0],[-20,10,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,10],[-9,4],[-19,10]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, 6, 3, 0);
+
+    // Safety desk at entrance
+    const sd = this.loader.createDesk(0x444455);
+    sd.position.set(0, 0, 28); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 27.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {
@@ -6328,18 +6596,29 @@ window.CommCenter = class CommCenter extends window.Location {
   }
 
   buildInterior() {
-    // Operations room divider
-    this.addPartition(-5, 0, 20, false);
-    this.addPartition(-5, 0, 12, true);
+    // Server stacks with pipe cooling runs overhead
+    this.addWallPipes(-23, 0, 50, 0x226688);
+    this.addWallPipes(23, 0, 50, 0x226688);
+    this.addPipeRun(0, 4.0, -15, 40, true, 0x3388aa);
 
-    // Operator workstations
-    [[-12, -5, 0],[-12, -12, 0],[-12, -19, 0],[-18, -5, Math.PI],[-18, -12, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-11,-5],[-11,-12],[-11,-19],[-17,-5],[-17,-12]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Equipment crates / battery banks
+    this.addStorageCrates(-20, -18, 2, 3);
+    this.addStorageCrates(16, -18, 2, 3);
 
-    // Filing area
-    this.addFilingCabinets(-22, -18, 4, 0);
+    // Barrels (coolant)
+    this.addBarrels(-20, 10, 4, 0.65);
+    this.addBarrels(14, 10, 4, 0.65);
+
+    // Control panels along back wall
+    this.addControlPanel(-12, -22, 0);
+    this.addControlPanel(0, -22, 0);
+    this.addControlPanel(12, -22, 0);
+
+    // Operations room (small)
+    this.addPartition(-5, 0, 18, false);
+    this.addPartition(-5, 0, 10, true);
+    [[-12,-5,0],[-12,-12,0],[-18,-5,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-11,-5],[-11,-12],[-17,-5]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-22, -5, 3, 0);
 
     // Supervisor desk
@@ -6516,18 +6795,42 @@ window.OilRefinery = class OilRefinery extends window.Location {
   }
 
   buildInterior() {
-    // Process control room
-    this.addPartition(-5, -5, 22, true);
-    this.addPartition(-16, -5, 12, false);
+    // Massive storage tanks (oil/gas)
+    this.addIndustrialTank(-30, -30, 1.4, 6.0, 0x553300);
+    this.addIndustrialTank(-20, -30, 1.2, 5.0, 0x664400);
+    this.addIndustrialTank(22, -30, 1.4, 6.0, 0x553300);
+    this.addIndustrialTank(12, -30, 1.0, 4.0, 0x664400);
+    this.addIndustrialTank(-30, 15, 1.0, 4.0, 0x774411);
+    this.addIndustrialTank(28, 15, 1.0, 4.0, 0x774411);
 
-    // Operator stations
-    [[-10, -8, 0],[-10, -14, 0],[-10, -20, 0],[-22, -8, Math.PI],[-22, -14, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9,-8],[-9,-14],[-9,-20],[-21,-8],[-21,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, -8, 4, 0);
+    // Pipeline networks
+    this.addWallPipes(-36, 0, 75, 0x886633);
+    this.addWallPipes(36, 0, 75, 0x886633);
+    this.addPipeRun(0, 4.0, -15, 60, true, 0xaa8844);
+    this.addPipeRun(0, 2.5, -15, 60, true, 0x886633);
 
-    // Safety inspector desk
+    // Barrel clusters (chemical by-products)
+    this.addBarrels(-25, 5, 6, 0.7);
+    this.addBarrels(-25, 10, 5, 0.7);
+    this.addBarrels(20, 5, 6, 0.7);
+
+    // Processing conveyors
+    this.addConveyor(0, 5, 16, 0);
+    this.addConveyor(0, -5, 16, 0);
+
+    // Control panels
+    this.addControlPanel(0, -32, 0);
+    this.addControlPanel(-32, 0, Math.PI / 2);
+    this.addControlPanel(30, 0, -Math.PI / 2);
+
+    // Small process control room
+    this.addPartition(-5, -5, 20, true);
+    this.addPartition(-15, -5, 10, false);
+    [[-10,-8,0],[-10,-14,0],[-20,-8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,-8],[-9,-14],[-19,-8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, -8, 3, 0);
+
+    // Safety desk
     this.addDesk(20, 20, Math.PI);
     this.addEmployee(19, 20, Math.PI);
   }
@@ -6723,33 +7026,45 @@ window.CommandCenter = class CommandCenter extends window.Location {
   }
 
   buildInterior() {
-    // Briefing room
-    this.addPartition(0, -5, 24, true);
-    this.addPartition(0, -5, 16, false);
+    // Equipment crates & military hardware
+    this.addStorageCrates(-30, -25, 4, 4);
+    this.addStorageCrates(24, -25, 4, 3);
+    this.addBarrels(-28, 10, 5, 0.7);
+    this.addBarrels(24, 10, 5, 0.7);
 
-    // Strategy desks
-    [[-8, -12, 0],[-8, -18, 0],[-8, -24, 0],[-15, -12, Math.PI],[-15, -18, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-7,-12],[-7,-18],[-7,-24],[-14,-12],[-14,-18]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Tactical display / control panels
+    this.addControlPanel(-20, -28, 0);
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(20, -28, 0);
+    this.addControlPanel(-30, 0, Math.PI / 2);
+    this.addControlPanel(28, 0, -Math.PI / 2);
+
+    // Wall pipe conduits
+    this.addWallPipes(-34, 0, 70, 0x334455);
+    this.addWallPipes(34, 0, 70, 0x334455);
+
+    // Conveyor (equipment logistics)
+    this.addConveyor(0, -15, 18, 0);
+
+    // Ops room
+    this.addPartition(0, -5, 24, true);
+    this.addPartition(0, -5, 14, false);
+    [[-8,-12,0],[-8,-18,0],[-15,-12,Math.PI],[-15,-18,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-7,-12],[-7,-18],[-14,-12],[-14,-18]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
 
     // General's office
-    this.addPartition(15, -5, 16, false);
-    this.addPartition(15, -21, 16, true);
-    this.addDesk(22, -13, Math.PI);
-    this.addEmployee(21, -13, Math.PI);
+    this.addPartition(15, -5, 14, false);
+    this.addPartition(15, -19, 14, true);
+    this.addDesk(22, -12, Math.PI);
+    this.addEmployee(21, -12, Math.PI);
     this.addFilingCabinets(28, -8, 4, 0);
 
     // Guard post at entrance
-    const gDesk = this.loader.createDesk(0x333355);
-    gDesk.position.set(0, 0, 28);
-    this.scene.add(gDesk);
-    this.meshes.push(gDesk);
-    const gMon = this.loader.createMonitor();
-    gMon.position.set(0, 0.78, 27.7);
-    gMon.rotation.y = Math.PI;
-    this.scene.add(gMon);
-    this.meshes.push(gMon);
+    const gd = this.loader.createDesk(0x333355);
+    gd.position.set(0, 0, 28); this.scene.add(gd); this.meshes.push(gd);
+    const gm = this.loader.createMonitor();
+    gm.position.set(0, 0.78, 27.7); gm.rotation.y = Math.PI;
+    this.scene.add(gm); this.meshes.push(gm);
   }
 
   build() {
@@ -6958,27 +7273,48 @@ window.MilitaryAirport = class MilitaryAirport extends window.Location {
   }
 
   buildInterior() {
-    // Control tower office
-    this.addPartition(30, -10, 20, false);
-    this.addPartition(30, -10, 16, true);
+    // Fuel storage tanks (large)
+    this.addIndustrialTank(-40, -30, 1.5, 5.0, 0x553300);
+    this.addIndustrialTank(-30, -30, 1.2, 4.0, 0x664400);
+    this.addIndustrialTank(35, -30, 1.5, 5.0, 0x553300);
+    this.addIndustrialTank(25, -30, 1.2, 4.0, 0x664400);
 
-    // ATC workstations
-    [[35, -14, 0],[35, -20, 0],[42, -14, Math.PI],[42, -20, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[36,-14],[36,-20],[43,-14],[43,-20]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Fuel pipe runs
+    this.addWallPipes(-48, 0, 80, 0x886633);
+    this.addWallPipes(48, 0, 80, 0x886633);
+    this.addPipeRun(0, 3.0, -15, 80, true, 0xaa8844);
+
+    // Equipment & weapons crates
+    this.addStorageCrates(-40, 10, 3, 4);
+    this.addStorageCrates(-40, 20, 2, 4);
+    this.addStorageCrates(34, 10, 3, 4);
+
+    // Barrel clusters
+    this.addBarrels(-35, 5, 5, 0.7);
+    this.addBarrels(30, 5, 5, 0.7);
+
+    // Control panels (maintenance stations)
+    this.addControlPanel(-40, -5, Math.PI / 2);
+    this.addControlPanel(38, -5, -Math.PI / 2);
+    this.addControlPanel(0, -32, 0);
+
+    // Conveyors (cargo handling)
+    this.addConveyor(-10, 5, 14, 0);
+    this.addConveyor(10, 5, 14, 0);
+
+    // ATC control tower
+    this.addPartition(30, -10, 20, false);
+    this.addPartition(30, -10, 14, true);
+    [[35,-14,0],[35,-20,0],[42,-14,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[36,-14],[36,-20],[43,-14]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(46, -10, 3, 0);
 
-    // Security checkpoint near entrance
-    const sDesk = this.loader.createDesk(0x3a3a2a);
-    sDesk.position.set(0, 0, 32);
-    this.scene.add(sDesk);
-    this.meshes.push(sDesk);
-    const sMon = this.loader.createMonitor();
-    sMon.position.set(0, 0.78, 31.7);
-    sMon.rotation.y = Math.PI;
-    this.scene.add(sMon);
-    this.meshes.push(sMon);
+    // Security checkpoint
+    const sd = this.loader.createDesk(0x3a3a2a);
+    sd.position.set(0, 0, 32); this.scene.add(sd); this.meshes.push(sd);
+    const sm = this.loader.createMonitor();
+    sm.position.set(0, 0.78, 31.7); sm.rotation.y = Math.PI;
+    this.scene.add(sm); this.meshes.push(sm);
   }
 
   build() {
@@ -7196,27 +7532,38 @@ window.WaterPlant = class WaterPlant extends window.Location {
   }
 
   buildInterior() {
-    // Monitoring room
-    this.addPartition(-5, 0, 16, false);
-    this.addPartition(-5, 0, 10, true);
+    // Water storage tanks
+    this.addIndustrialTank(-18, -18, 1.1, 4.0, 0x3366aa);
+    this.addIndustrialTank(-10, -18, 0.9, 3.2, 0x2255aa);
+    this.addIndustrialTank(12, -18, 1.1, 4.0, 0x3366aa);
 
-    // Water engineer desks
-    [[-10, 2, 0],[-10, -4, 0],[-16, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-9, 2],[-9,-4],[-15, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Pump pipe networks
+    this.addWallPipes(-23, 0, 50, 0x2255aa);
+    this.addWallPipes(23, 0, 50, 0x2255aa);
+    this.addPipeRun(0, 2.5, -10, 40, true, 0x3366bb);
+
+    // Chemical barrels (treatment)
+    this.addBarrels(-18, 8, 4, 0.65);
+    this.addBarrels(12, 8, 4, 0.65);
+
+    // Control panels
+    this.addControlPanel(-20, -5, Math.PI / 2);
+    this.addControlPanel(18, -5, -Math.PI / 2);
+    this.addControlPanel(0, -21, 0);
+
+    // Monitoring room
+    this.addPartition(-5, 0, 14, false);
+    this.addPartition(-5, 0, 8, true);
+    [[-10,2,0],[-10,-4,0],[-16,2,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-9,2],[-9,-4],[-15,2]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-20, -4, 3, 0);
 
-    // Entrance security desk
-    const eDesk = this.loader.createDesk(0x2a4050);
-    eDesk.position.set(0, 0, 20);
-    this.scene.add(eDesk);
-    this.meshes.push(eDesk);
-    const eMon = this.loader.createMonitor();
-    eMon.position.set(0, 0.78, 19.7);
-    eMon.rotation.y = Math.PI;
-    this.scene.add(eMon);
-    this.meshes.push(eMon);
+    // Security desk
+    const ed = this.loader.createDesk(0x2a4050);
+    ed.position.set(0, 0, 20); this.scene.add(ed); this.meshes.push(ed);
+    const em = this.loader.createMonitor();
+    em.position.set(0, 0.78, 19.7); em.rotation.y = Math.PI;
+    this.scene.add(em); this.meshes.push(em);
   }
 
   build() {
@@ -7370,25 +7717,45 @@ window.MetalFactory = class MetalFactory extends window.Location {
   }
 
   buildInterior() {
-    // Admin corridor left
-    this.addPartition(-8, -5, 20, false);
-    this.addPartition(-8, -5, 14, true);
+    // Smelting/processing tanks
+    this.addIndustrialTank(-22, -22, 1.1, 4.5, 0x884422);
+    this.addIndustrialTank(-14, -22, 0.9, 3.5, 0x773311);
+    this.addIndustrialTank(16, -22, 1.1, 4.5, 0x884422);
 
-    // Admin desks
-    [[-14, -8, 0],[-14, -14, 0],[-20, -8, Math.PI],[-20, -14, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-13,-8],[-13,-14],[-19,-8],[-19,-14]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
+    // Metal stock crates
+    this.addStorageCrates(-24, 8, 3, 4);
+    this.addStorageCrates(-24, 18, 2, 3);
+    this.addStorageCrates(18, 8, 3, 4);
+
+    // Conveyor belts (metal processing)
+    this.addConveyor(-4, 5, 14, 0);
+    this.addConveyor(4, 5, 14, 0);
+    this.addConveyor(0, -8, 14, 0);
+
+    // Wall pipe conduits
+    this.addWallPipes(-28, 0, 60, 0x775533);
+    this.addWallPipes(28, 0, 60, 0x775533);
+
+    // Control panels
+    this.addControlPanel(-26, 0, Math.PI / 2);
+    this.addControlPanel(24, 0, -Math.PI / 2);
+    this.addControlPanel(0, -25, 0);
+
+    // Barrels (lubricants/chemicals)
+    this.addBarrels(-20, 0, 4, 0.65);
+    this.addBarrels(14, 0, 4, 0.65);
+
+    // Admin room
+    this.addPartition(-8, -5, 18, false);
+    this.addPartition(-8, -5, 12, true);
+    [[-14,-8,0],[-14,-14,0],[-20,-8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-13,-8],[-13,-14],[-19,-8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
     this.addFilingCabinets(-25, -8, 3, 0);
 
-    // Quality control station
+    // QC station
     this.addDesk(18, 20, Math.PI);
     this.addEmployee(17, 20, Math.PI);
-    const qMon = this.loader.createMonitor();
-    qMon.position.set(18, 0.78, 19.7);
-    qMon.rotation.y = Math.PI;
-    this.scene.add(qMon);
-    this.meshes.push(qMon);
+    this.addControlPanel(22, 20, -Math.PI / 2);
   }
 
   build() {
@@ -7567,27 +7934,46 @@ window.AmmoDepot = class AmmoDepot extends window.Location {
   }
 
   buildInterior() {
-    // Inventory office wing
-    this.addPartition(-10, 5, 18, true);
-    this.addPartition(-10, 5, 12, false);
+    // Ammo crates stacked high along all walls
+    this.addStorageCrates(-26, -25, 4, 5);
+    this.addStorageCrates(-26, -12, 3, 5);
+    this.addStorageCrates(-26, 5, 3, 5);
+    this.addStorageCrates(20, -25, 4, 5);
+    this.addStorageCrates(20, -12, 3, 4);
+    this.addStorageCrates(20, 5, 3, 4);
 
-    // Logistics desks
-    [[-16, 8, 0],[-16, 2, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-15, 8],[-15, 2],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, 5, 4, 0);
+    // Explosive barrel clusters
+    this.addBarrels(-22, -5, 5, 0.7);
+    this.addBarrels(-22, 2, 5, 0.7);
+    this.addBarrels(16, -5, 5, 0.7);
+    this.addBarrels(16, 2, 5, 0.7);
+
+    // Conveyors (ammo handling)
+    this.addConveyor(-5, -10, 16, 0);
+    this.addConveyor(5, -10, 16, 0);
+
+    // Wall pipes (sprinkler/safety)
+    this.addWallPipes(-31, 0, 65, 0x885522);
+    this.addWallPipes(31, 0, 65, 0x885522);
+
+    // Control panels
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(-28, 0, Math.PI / 2);
+    this.addControlPanel(26, 0, -Math.PI / 2);
+
+    // Inventory office
+    this.addPartition(-10, 5, 16, true);
+    this.addPartition(-10, 5, 10, false);
+    [[-16,8,0],[-16,2,0],[-22,8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-15,8],[-15,2],[-21,8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, 5, 3, 0);
 
     // Checkpoint desk at entrance
-    const cDesk = this.loader.createDesk(0x4a3010);
-    cDesk.position.set(0, 0, 26);
-    this.scene.add(cDesk);
-    this.meshes.push(cDesk);
-    const cMon = this.loader.createMonitor();
-    cMon.position.set(0, 0.78, 25.7);
-    cMon.rotation.y = Math.PI;
-    this.scene.add(cMon);
-    this.meshes.push(cMon);
+    const cd = this.loader.createDesk(0x4a3010);
+    cd.position.set(0, 0, 26); this.scene.add(cd); this.meshes.push(cd);
+    const cm = this.loader.createMonitor();
+    cm.position.set(0, 0.78, 25.7); cm.rotation.y = Math.PI;
+    this.scene.add(cm); this.meshes.push(cm);
   }
 
   build() {
@@ -10045,13 +10431,16 @@ function loadLocation(locId) {
   const patrolSys = new PatrolSystem();
   patrolSys.assignRoutes(GAME.currentLocation.guards, locId);
 
-  // Spawn player inside (center of building)
-  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, 0);
+  // Spawn player outside, facing into building
+  const _loc = GAME.currentLocation;
+  const spawnPos = new THREE.Vector3(0, CONFIG.PLAYER_HEIGHT, _loc.depth / 2 + 4);
   GAME.player = new Player(GAME.scene, GAME.camera);
   GAME.player.inventory = new Inventory();
   GAME.player.disguise = new Disguise(GAME.player);
   GAME.player.animator = new PlayerAnimator(GAME.camera);
   GAME.player.reset(spawnPos);
+  GAME.player.yaw = Math.PI;
+  GAME.player.camera.rotation.set(0, Math.PI, 0, 'YXZ');
 
   // Drone fleet
   GAME.droneFleet = new DroneFleet(GAME.scene);

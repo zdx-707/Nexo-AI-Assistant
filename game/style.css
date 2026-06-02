@@ -620,62 +620,71 @@ body {
   pointer-events: none;
 }
 
+/* Left 46%: joystick zone */
 #joy-zone {
   position: absolute;
   left: 0; bottom: 0;
-  width: 45%; height: 60%;
+  width: 46%; height: 68%;
   pointer-events: auto;
   touch-action: none;
+  /* subtle guide */
+  background: radial-gradient(ellipse at 40% 80%, rgba(0,255,204,0.03) 0%, transparent 70%);
 }
 
+/* Right 54% top portion: look zone */
 #look-zone {
   position: absolute;
   right: 0; top: 0;
-  width: 55%; height: 100%;
+  width: 54%; height: 65%;
   pointer-events: auto;
   touch-action: none;
+  background: radial-gradient(ellipse at 60% 30%, rgba(100,100,255,0.03) 0%, transparent 70%);
 }
 
 #joy-base {
   position: absolute;
-  width: 96px; height: 96px;
+  width: 108px; height: 108px;
   border-radius: 50%;
-  background: rgba(0,255,204,0.08);
-  border: 2px solid rgba(0,255,204,0.3);
-  opacity: 0.4;
+  background: rgba(0,255,204,0.06);
+  border: 2px solid rgba(0,255,204,0.35);
+  opacity: 0.35;
   transition: opacity 0.15s;
   pointer-events: none;
+  box-shadow: 0 0 20px rgba(0,255,204,0.1) inset;
 }
 
 #joy-thumb {
   position: absolute;
   top: 50%; left: 50%;
-  width: 44px; height: 44px;
-  margin: -22px 0 0 -22px;
+  width: 52px; height: 52px;
+  margin: -26px 0 0 -26px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,255,204,0.5), rgba(0,255,204,0.15));
-  border: 2px solid rgba(0,255,204,0.6);
-  box-shadow: 0 0 16px rgba(0,255,204,0.4);
+  background: radial-gradient(circle, rgba(0,255,204,0.55), rgba(0,255,204,0.12));
+  border: 2px solid rgba(0,255,204,0.7);
+  box-shadow: 0 0 18px rgba(0,255,204,0.45);
   transition: none;
 }
 
+/* Action buttons — bottom right quadrant */
 #touch-btns {
   position: absolute;
-  bottom: 24px; right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  bottom: 20px; right: 14px;
+  display: grid;
+  grid-template-columns: 72px 72px;
+  grid-template-rows: 56px 72px;
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
   pointer-events: auto;
 }
 
 .tbtn {
-  min-width: 64px; min-height: 64px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.25);
-  background: rgba(10,10,30,0.75);
+  background: rgba(8,8,24,0.82);
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   flex-direction: column;
@@ -685,47 +694,55 @@ body {
   touch-action: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.1s, transform 0.1s;
+  transition: background 0.08s, transform 0.08s;
   line-height: 1;
+  backdrop-filter: blur(4px);
 }
 
 .tbtn span {
   font-size: 0.55rem;
   font-weight: 400;
-  opacity: 0.7;
-  margin-top: 2px;
+  opacity: 0.75;
+  margin-top: 3px;
 }
 
-.tbtn.active { transform: scale(0.9); }
+.tbtn.active {
+  transform: scale(0.87);
+  background: rgba(255,255,255,0.1);
+}
 
+/* Up/Down smaller — row 1 */
+.tbtn-space, .tbtn-c {
+  width: 56px; height: 56px;
+  font-size: 1.3rem;
+  border-color: rgba(180,180,255,0.3);
+  color: #ccccff;
+}
+
+/* Action — row 2 */
 .tbtn-e {
-  border-color: rgba(0,255,204,0.5);
+  border-color: rgba(0,255,204,0.55);
   color: #00ffcc;
-  box-shadow: 0 0 12px rgba(0,255,204,0.25);
+  box-shadow: 0 0 14px rgba(0,255,204,0.3);
 }
-.tbtn-e.active { background: rgba(0,255,204,0.2); }
+.tbtn-e.active { background: rgba(0,255,204,0.22); }
 
 .tbtn-f {
-  border-color: rgba(255,170,0,0.5);
+  border-color: rgba(255,170,0,0.55);
   color: #ffaa00;
-  box-shadow: 0 0 12px rgba(255,170,0,0.25);
+  box-shadow: 0 0 14px rgba(255,170,0,0.3);
 }
-.tbtn-f.active { background: rgba(255,170,0,0.2); }
-
-.tbtn-space, .tbtn-c {
-  min-width: 52px; min-height: 52px;
-  font-size: 1.3rem;
-  border-color: rgba(200,200,255,0.3);
-}
+.tbtn-f.active { background: rgba(255,170,0,0.22); }
 
 #tbtn-pause {
   position: absolute;
-  top: 16px; right: 16px;
-  min-width: 48px; min-height: 48px;
-  font-size: 1.2rem;
+  top: 14px; left: 14px;
+  width: 48px; height: 48px;
+  font-size: 1.15rem;
   border-color: rgba(150,150,200,0.4);
   pointer-events: auto;
   z-index: 201;
+  border-radius: 12px;
 }
 
 /* Responsive menus on mobile */

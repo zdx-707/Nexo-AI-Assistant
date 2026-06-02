@@ -8,8 +8,13 @@ window.TouchInput = class TouchInput {
     this.lookLast = { x: 0, y: 0 };
     this.dx = 0;
     this.dy = 0;
+    this.lookVelX = 0;
+    this.lookVelY = 0;
     this._pendingPressed = {};
     this._pendingKeys = {};
+    // Scale for small screens
+    this._sensX = 0.0055;
+    this._sensY = 0.004;
     this._buildDOM();
     this._bind();
   }
@@ -31,7 +36,6 @@ window.TouchInput = class TouchInput {
     `;
     document.body.appendChild(el);
     this.el = el;
-
     this.joyBase  = el.querySelector('#joy-base');
     this.joyThumb = el.querySelector('#joy-thumb');
     this.joyZone  = el.querySelector('#joy-zone');
@@ -42,17 +46,16 @@ window.TouchInput = class TouchInput {
     const jz = this.joyZone;
     const lz = this.lookZone;
 
-    // Joystick
     jz.addEventListener('touchstart', e => {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (this.joystickTouchId === null) {
           this.joystickTouchId = t.identifier;
-          const r = jz.getBoundingClientRect();
           this.joystickOrigin = { x: t.clientX, y: t.clientY };
-          this.joyBase.style.left = (t.clientX - r.left - 48) + 'px';
-          this.joyBase.style.top  = (t.clientY - r.top  - 48) + 'px';
-          this.joyBase.style.opacity = '1';
+          const r = jz.getBoundingClientRect();
+          this.joyBase.style.left = (t.clientX - r.left - 52) + 'px';
+          this.joyBase.style.top  = (t.clientY - r.top  - 52) + 'px';
+          this.joyBase.style.opacity = '0.85';
         }
       }
     }, { passive: false });
@@ -64,10 +67,11 @@ window.TouchInput = class TouchInput {
           const dx = t.clientX - this.joystickOrigin.x;
           const dy = t.clientY - this.joystickOrigin.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxR = 44;
-          const clamped = dist > maxR ? maxR / dist : 1;
-          this.joystickPos = { x: dx * clamped, y: dy * clamped };
-          this.joyThumb.style.transform = `translate(${this.joystickPos.x}px, ${this.joystickPos.y}px)`;
+          const maxR = 50;
+          const ratio = dist > maxR ? maxR / dist : 1;
+          this.joystickPos = { x: dx * ratio, y: dy * ratio };
+          this.joyThumb.style.transform =
+            `translate(${this.joystickPos.x}px,${this.joystickPos.y}px)`;
         }
       }
     }, { passive: false });
@@ -78,20 +82,22 @@ window.TouchInput = class TouchInput {
           this.joystickTouchId = null;
           this.joystickPos = { x: 0, y: 0 };
           this.joyThumb.style.transform = 'translate(0,0)';
-          this.joyBase.style.opacity = '0.4';
+          this.joyBase.style.opacity = '0.35';
         }
       }
     };
     jz.addEventListener('touchend', endJoy, { passive: false });
     jz.addEventListener('touchcancel', endJoy, { passive: false });
 
-    // Look zone
+    // Look zone — accumulate raw pixel delta, apply sensitivity in apply()
     lz.addEventListener('touchstart', e => {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (this.lookTouchId === null) {
           this.lookTouchId = t.identifier;
           this.lookLast = { x: t.clientX, y: t.clientY };
+          this.lookVelX = 0;
+          this.lookVelY = 0;
         }
       }
     }, { passive: false });
@@ -100,8 +106,12 @@ window.TouchInput = class TouchInput {
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (t.identifier === this.lookTouchId) {
-          this.dx += (t.clientX - this.lookLast.x);
-          this.dy += (t.clientY - this.lookLast.y);
+          const rawDx = t.clientX - this.lookLast.x;
+          const rawDy = t.clientY - this.lookLast.y;
+          // Cap per-event to prevent huge jumps
+          const cap = 40;
+          this.dx += Math.max(-cap, Math.min(cap, rawDx));
+          this.dy += Math.max(-cap, Math.min(cap, rawDy));
           this.lookLast = { x: t.clientX, y: t.clientY };
         }
       }
@@ -135,7 +145,6 @@ window.TouchInput = class TouchInput {
       btn.addEventListener('touchcancel', up, { passive: false });
     });
 
-    // Pause
     document.getElementById('tbtn-pause').addEventListener('touchstart', e => {
       e.preventDefault();
       this._pendingPressed['Escape'] = true;
@@ -145,28 +154,33 @@ window.TouchInput = class TouchInput {
   apply(keyboard, mouse) {
     if (!this.active) return;
 
-    // Inject look deltas
-    mouse.dx += this.dx;
-    mouse.dy += this.dy;
+    // Convert pixel deltas → radians using touch sensitivity
+    // mouse.sensitivity is 0.002 (for desktop pointer lock px)
+    // We override here with a larger touch-specific factor
+    const touchFactor = 1 / 0.002;  // cancel out mouse.sensitivity, apply our own
+    mouse.dx += this.dx * this._sensX * touchFactor;
+    mouse.dy += this.dy * this._sensY * touchFactor;
     this.dx = 0;
     this.dy = 0;
 
-    // Inject joystick as WASD
-    const deadzone = 10;
+    // Analog joystick → WASD + sprint at high deflection
+    const deadzone = 8;
+    const maxR = 50;
     const jx = this.joystickPos.x;
     const jy = this.joystickPos.y;
+    const deflection = Math.sqrt(jx * jx + jy * jy);
 
     keyboard.keys['KeyW'] = jy < -deadzone;
     keyboard.keys['KeyS'] = jy >  deadzone;
     keyboard.keys['KeyA'] = jx < -deadzone;
     keyboard.keys['KeyD'] = jx >  deadzone;
+    // Sprint when joystick near max
+    keyboard.keys['ShiftLeft'] = deflection > maxR * 0.75;
 
-    // Inject action keys
+    // Action keys
     for (const k of Object.keys(this._pendingKeys)) {
       keyboard.keys[k] = this._pendingKeys[k];
     }
-
-    // Inject pressed (one-frame)
     for (const k of Object.keys(this._pendingPressed)) {
       keyboard.pressed[k] = true;
     }
@@ -189,6 +203,7 @@ window.TouchInput = class TouchInput {
   }
 
   static isMobile() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      window.matchMedia('(pointer: coarse)').matches;
   }
 };

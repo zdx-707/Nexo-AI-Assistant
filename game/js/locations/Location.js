@@ -20,17 +20,21 @@ window.Location = class Location {
     const w = this.width;
     const d = this.depth;
     const h = this.wallHeight;
+    const DW = 3.5;
+    const DH = 2.8;
 
-    // Floor with tile pattern
+    // Floor
     const floor = this.loader.createFloor(w, d, this.floorColor || CONFIG.COLORS.FLOOR);
     floor.position.set(0, 0, 0);
     this.scene.add(floor);
     this.meshes.push(floor);
 
-    // Walls
+    // Walls — south wall (z=+d/2) split for door opening
     const walls = [
       { s: [w, h, 0.5], p: [0, h / 2, -d / 2] },
-      { s: [w, h, 0.5], p: [0, h / 2, d / 2] },
+      { s: [(w - DW) / 2, h, 0.5], p: [-(w + DW) / 4, h / 2, d / 2] },
+      { s: [(w - DW) / 2, h, 0.5], p: [(w + DW) / 4, h / 2, d / 2] },
+      { s: [DW, h - DH, 0.5], p: [0, DH + (h - DH) / 2, d / 2] },
       { s: [0.5, h, d], p: [-w / 2, h / 2, 0] },
       { s: [0.5, h, d], p: [w / 2, h / 2, 0] },
     ];
@@ -172,6 +176,69 @@ window.Location = class Location {
   addPickup(pos, type) {
     const pickup = new PickupItem(this.scene, pos, type);
     this.pickups.push(pickup);
+  }
+
+  // ── Industrial prop helpers ───────────────────────────────
+  addIndustrialTank(x, z, r = 0.9, h = 3.0, color = 0x557799) {
+    const t = this.loader.createIndustrialTank(r, h, color);
+    t.position.set(x, 0, z);
+    this.scene.add(t);
+    this.meshes.push(t);
+  }
+
+  addStorageCrates(x, z, rows = 2, cols = 2) {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const crate = this.loader.createStorageCrate();
+        crate.position.set(x + c * 1.0, r * 0.82, z);
+        this.scene.add(crate);
+        this.meshes.push(crate);
+      }
+    }
+  }
+
+  addBarrels(x, z, count = 4, spacing = 0.65) {
+    for (let i = 0; i < count; i++) {
+      const barrel = this.loader.createIndustrialBarrel(i % 2 === 0 ? 0x443322 : 0x223344);
+      barrel.position.set(x + i * spacing, 0, z);
+      this.scene.add(barrel);
+      this.meshes.push(barrel);
+    }
+  }
+
+  addConveyor(x, z, length, yaw = 0) {
+    const belt = this.loader.createConveyorBelt(length);
+    belt.position.set(x, 0, z);
+    belt.rotation.y = yaw;
+    this.scene.add(belt);
+    this.meshes.push(belt);
+  }
+
+  addControlPanel(x, z, yaw = 0) {
+    const p = this.loader.createControlPanel();
+    p.position.set(x, 0, z);
+    p.rotation.y = yaw;
+    this.scene.add(p);
+    this.meshes.push(p);
+  }
+
+  addPipeRun(x, y, z, length, horizontal = true, color = 0x888888) {
+    const pipe = this.loader.createPipeRun(length, 0.12, color);
+    pipe.position.set(x, y, z);
+    if (!horizontal) pipe.rotation.y = Math.PI / 2;
+    this.scene.add(pipe);
+    this.meshes.push(pipe);
+  }
+
+  addWallPipes(wx, wz, wallLen, color = 0x666677) {
+    for (let i = 0; i < 3; i++) {
+      const segLen = wallLen * 0.85;
+      const pipe = this.loader.createPipeRun(segLen, 0.08 + i * 0.03, color);
+      pipe.position.set(wx, 1.2 + i * 0.35, wz);
+      if (Math.abs(wx) > Math.abs(wz)) pipe.rotation.y = Math.PI / 2;
+      this.scene.add(pipe);
+      this.meshes.push(pipe);
+    }
   }
 
   update(dt) {

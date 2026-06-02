@@ -9,27 +9,46 @@ window.AmmoDepot = class AmmoDepot extends window.Location {
   }
 
   buildInterior() {
-    // Inventory office wing
-    this.addPartition(-10, 5, 18, true);
-    this.addPartition(-10, 5, 12, false);
+    // Ammo crates stacked high along all walls
+    this.addStorageCrates(-26, -25, 4, 5);
+    this.addStorageCrates(-26, -12, 3, 5);
+    this.addStorageCrates(-26, 5, 3, 5);
+    this.addStorageCrates(20, -25, 4, 5);
+    this.addStorageCrates(20, -12, 3, 4);
+    this.addStorageCrates(20, 5, 3, 4);
 
-    // Logistics desks
-    [[-16, 8, 0],[-16, 2, 0],[-22, 8, Math.PI],[-22, 2, Math.PI]].forEach(([x,z,rot]) => {
-      this.addDesk(x, z, rot);
-    });
-    [[-15, 8],[-15, 2],[-21, 8],[-21, 2]].forEach(([x,z]) => this.addEmployee(x, z, Math.PI));
-    this.addFilingCabinets(-28, 5, 4, 0);
+    // Explosive barrel clusters
+    this.addBarrels(-22, -5, 5, 0.7);
+    this.addBarrels(-22, 2, 5, 0.7);
+    this.addBarrels(16, -5, 5, 0.7);
+    this.addBarrels(16, 2, 5, 0.7);
+
+    // Conveyors (ammo handling)
+    this.addConveyor(-5, -10, 16, 0);
+    this.addConveyor(5, -10, 16, 0);
+
+    // Wall pipes (sprinkler/safety)
+    this.addWallPipes(-31, 0, 65, 0x885522);
+    this.addWallPipes(31, 0, 65, 0x885522);
+
+    // Control panels
+    this.addControlPanel(0, -28, 0);
+    this.addControlPanel(-28, 0, Math.PI / 2);
+    this.addControlPanel(26, 0, -Math.PI / 2);
+
+    // Inventory office
+    this.addPartition(-10, 5, 16, true);
+    this.addPartition(-10, 5, 10, false);
+    [[-16,8,0],[-16,2,0],[-22,8,Math.PI]].forEach(([x,z,r]) => this.addDesk(x,z,r));
+    [[-15,8],[-15,2],[-21,8]].forEach(([x,z]) => this.addEmployee(x,z,Math.PI));
+    this.addFilingCabinets(-28, 5, 3, 0);
 
     // Checkpoint desk at entrance
-    const cDesk = this.loader.createDesk(0x4a3010);
-    cDesk.position.set(0, 0, 26);
-    this.scene.add(cDesk);
-    this.meshes.push(cDesk);
-    const cMon = this.loader.createMonitor();
-    cMon.position.set(0, 0.78, 25.7);
-    cMon.rotation.y = Math.PI;
-    this.scene.add(cMon);
-    this.meshes.push(cMon);
+    const cd = this.loader.createDesk(0x4a3010);
+    cd.position.set(0, 0, 26); this.scene.add(cd); this.meshes.push(cd);
+    const cm = this.loader.createMonitor();
+    cm.position.set(0, 0.78, 25.7); cm.rotation.y = Math.PI;
+    this.scene.add(cm); this.meshes.push(cm);
   }
 
   build() {
