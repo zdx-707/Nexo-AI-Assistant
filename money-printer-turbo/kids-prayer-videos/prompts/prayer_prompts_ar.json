@@ -1,0 +1,55 @@
+{
+  "system_prompt": "أنت كاتب محتوى متخصص في إنشاء محتوى تعليمي ديني ممتع للأطفال. اكتب بأسلوب بسيط وجذاب يناسب الأطفال من سن 3 إلى 10 سنوات. استخدم كلمات سهلة وجمل قصيرة. اجعل المحتوى مبهجاً وملوناً ومحفزاً للطفل على تعلم الصلاة بسعادة.",
+
+  "topics": [
+    {
+      "id": "1",
+      "title": "تعلّم الوضوء مع حمدان",
+      "prompt": "اكتب سكريبت فيديو كرتوني قصير للأطفال عن تعليم الوضوء بطريقة ممتعة. الشخصية الرئيسية طفل اسمه حمدان يتعلم الوضوء مع أبيه. اجعل الخطوات واضحة وممتعة: النية، غسل اليدين، المضمضة، غسل الوجه، غسل الذراعين، مسح الرأس، غسل القدمين. استخدم لغة بسيطة ومحببة للأطفال.",
+      "keywords": "cartoon boy learning wudu, colorful bathroom, Islamic animation, cute child prayer preparation, water splashing fun",
+      "duration": 60
+    },
+    {
+      "id": "2",
+      "title": "صلاة الفجر مع نور",
+      "prompt": "اكتب سكريبت فيديو كرتوني للأطفال عن طفلة اسمها نور تستيقظ مبكراً لصلاة الفجر بسعادة. أظهر جمال الفجر والنجوم والقمر. اجعل الطفلة متحمسة لصلاتها. نهايته تحفيزية ومبهجة.",
+      "keywords": "cute cartoon girl praying fajr, early morning stars, Islamic sunrise animation, colorful mosque, happy child prayer",
+      "duration": 60
+    },
+    {
+      "id": "3",
+      "title": "أركان الصلاة الخمسة",
+      "prompt": "اكتب سكريبت فيديو كرتوني يشرح للأطفال أوقات الصلوات الخمس: الفجر، الظهر، العصر، المغرب، العشاء. استخدم شخصيات كرتونية محببة وألوان زاهية. اجعل كل وقت صلاة يرتبط بحدث يومي مألوف للطفل.",
+      "keywords": "five daily prayers cartoon, Islamic education kids, colorful animation mosque, sun position prayer times, cute Muslim child",
+      "duration": 90
+    },
+    {
+      "id": "4",
+      "title": "كيف نقف في الصلاة",
+      "prompt": "اكتب سكريبت كرتوني تعليمي يوضح لطفل كيفية أداء حركات الصلاة: القيام، الركوع، السجود، التشهد، التسليم. استخدم شخصية كرتونية لطيفة تؤدي الحركات بشكل صحيح مع الإيضاح البسيط لكل حركة.",
+      "keywords": "Islamic prayer positions animation, cartoon child praying, ruku sujood kids tutorial, colorful prayer guide, cute Muslim animation",
+      "duration": 90
+    },
+    {
+      "id": "5",
+      "title": "الأذان - نداء الصلاة",
+      "prompt": "اكتب سكريبت كرتوني ممتع عن الأذان وما يجب على الطفل فعله عند سماعه. اجعل المؤذن في مئذنة جميلة والمشهد ملوناً. علّم الطفل ترديد الأذان بأسلوب ممتع.",
+      "keywords": "cartoon mosque minaret, muezzin calling adhan, colorful Islamic animation, children learning azan, cute Muslim city",
+      "duration": 60
+    },
+    {
+      "id": "6",
+      "title": "فضل الصلاة - لماذا نصلي؟",
+      "prompt": "اكتب سكريبت كرتوني يشرح للأطفال بأسلوب بسيط ومحبب لماذا نصلي ولله. تحدث عن الله الرحيم الذي يحبنا وكيف الصلاة تجعلنا نشعر بالسعادة والطمأنينة. استخدم قصة قصيرة محببة.",
+      "keywords": "why we pray Islamic cartoon, Allah love children animation, peaceful prayer illustration, colorful Islamic education, happy Muslim family",
+      "duration": 60
+    }
+  ],
+
+  "style_instructions": {
+    "visual_style": "كرتوني ملون وجذاب، ألوان زاهية ودافئة، شخصيات كرتونية لطيفة ومحببة للأطفال",
+    "tone": "مرح وبسيط ومحفز، بدون تعقيد",
+    "language_level": "كلمات سهلة، جمل قصيرة، تكرار مفيد",
+    "music": "موسيقى خلفية هادئة وجميلة مناسبة للأطفال"
+  }
+}
