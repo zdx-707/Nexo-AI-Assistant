@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مولّد فيديوهات الصلاة 🕌</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5c 50%, #0d3320 100%);
+      min-height: 100vh; color: #fff; padding: 20px;
+    }
+    .header {
+      text-align: center; padding: 30px 0 20px;
+    }
+    .header h1 { font-size: 1.8rem; color: #f0c040; margin-bottom: 8px; }
+    .header p  { color: #aad4ff; font-size: 0.95rem; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px; max-width: 500px; margin: 20px auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px; padding: 20px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .card:hover, .card:active { background: rgba(255,255,255,0.15); transform: scale(0.98); }
+    .card h2   { font-size: 1.1rem; margin-bottom: 6px; color: #f0e0a0; }
+    .card .meta { font-size: 0.85rem; color: #88c0ff; margin-bottom: 14px; }
+    .btn {
+      display: block; width: 100%;
+      background: linear-gradient(90deg, #f0a020, #e05010);
+      color: #fff; border: none; border-radius: 30px;
+      padding: 12px; font-size: 1rem; font-weight: bold;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Progress overlay */
+    #overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85); z-index: 100;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 30px;
+    }
+    #overlay.active { display: flex; }
+    .spinner {
+      width: 60px; height: 60px; border: 6px solid rgba(255,255,255,0.2);
+      border-top-color: #f0a020; border-radius: 50%;
+      animation: spin 1s linear infinite; margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #overlay h3 { font-size: 1.3rem; color: #f0c040; margin-bottom: 10px; }
+    #overlay p  { color: #aad4ff; margin-bottom: 20px; }
+    .progress-bar {
+      width: 100%; max-width: 300px; height: 10px;
+      background: rgba(255,255,255,0.15); border-radius: 5px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, #f0a020, #e05010);
+      transition: width 0.5s; border-radius: 5px;
+    }
+    #dl-btn {
+      display: none; margin-top: 20px;
+      background: linear-gradient(90deg, #20c060, #108040);
+      color: #fff; border: none; border-radius: 30px;
+      padding: 14px 36px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+    }
+    #close-btn {
+      margin-top: 12px; background: transparent;
+      color: #888; border: 1px solid #444; border-radius: 20px;
+      padding: 8px 24px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🕌 فيديوهات الصلاة للأطفال</h1>
+  <p>اختر موضوعاً وسيتم توليد الفيديو بصوت عربي</p>
+</div>
+
+<div class="card-grid" id="cards"></div>
+
+<!-- Progress Overlay -->
+<div id="overlay">
+  <div class="spinner"></div>
+  <h3 id="ov-title">جاري التوليد...</h3>
+  <p id="ov-step">تجهيز المواد</p>
+  <div class="progress-bar">
+    <div class="progress-fill" id="ov-bar" style="width:0%"></div>
+  </div>
+  <button id="dl-btn" onclick="downloadVideo()">⬇️ تحميل الفيديو</button>
+  <button id="close-btn" onclick="closeOverlay()">إغلاق</button>
+</div>
+
+<script>
+let currentTaskId = null;
+let pollInterval  = null;
+
+async function loadVideos() {
+  const res  = await fetch('/api/videos');
+  const list = await res.json();
+  const grid = document.getElementById('cards');
+  grid.innerHTML = '';
+  list.forEach(v => {
+    grid.innerHTML += `
+      <div class="card">
+        <h2>${v.title}</h2>
+        <div class="meta">${v.scenes} مشاهد</div>
+        <button class="btn" onclick="startGenerate('${v.id}', this)">▶️ توليد الفيديو</button>
+      </div>`;
+  });
+}
+
+async function startGenerate(videoId, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳ جارٍ التوليد...';
+
+  const res  = await fetch(`/api/generate/${videoId}`, { method: 'POST' });
+  const data = await res.json();
+  if (data.error) { alert(data.error); btn.disabled=false; return; }
+
+  currentTaskId = data.task_id;
+  document.getElementById('ov-title').textContent = 'جاري توليد الفيديو...';
+  document.getElementById('ov-step').textContent  = 'تجهيز المواد...';
+  document.getElementById('ov-bar').style.width   = '0%';
+  document.getElementById('dl-btn').style.display = 'none';
+  document.getElementById('overlay').classList.add('active');
+
+  pollInterval = setInterval(() => pollStatus(btn), 3000);
+}
+
+async function pollStatus(btn) {
+  if (!currentTaskId) return;
+  const res  = await fetch(`/api/status/${currentTaskId}`);
+  const data = await res.json();
+
+  document.getElementById('ov-bar').style.width  = (data.progress || 0) + '%';
+  document.getElementById('ov-step').textContent = data.current || '...';
+
+  if (data.status === 'done') {
+    clearInterval(pollInterval);
+    document.getElementById('ov-title').textContent = '🎉 اكتمل الفيديو!';
+    document.getElementById('ov-step').textContent  = 'الفيديو جاهز للتحميل';
+    document.getElementById('dl-btn').style.display = 'block';
+    if (btn) { btn.disabled=false; btn.textContent='▶️ توليد الفيديو'; }
+  } else if (data.status === 'error') {
+    clearInterval(pollInterval);
+    document.getElementById('ov-title').textContent = '❌ حدث خطأ';
+    document.getElementById('ov-step').textContent  = data.message || 'حاول مرة أخرى';
+    if (btn) { btn.disabled=false; btn.textContent='▶️ توليد الفيديو'; }
+  }
+}
+
+function downloadVideo() {
+  if (currentTaskId)
+    window.location.href = `/api/download/${currentTaskId}`;
+}
+
+function closeOverlay() {
+  clearInterval(pollInterval);
+  document.getElementById('overlay').classList.remove('active');
+}
+
+loadVideos();
+</script>
+</body>
+</html>
