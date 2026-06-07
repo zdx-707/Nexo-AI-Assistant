@@ -1,0 +1,61 @@
+# ==========================================
+# إعدادات فيديوهات الصلاة الكرتونية للأطفال
+# Kids Prayer Cartoon Videos - Configuration
+# ==========================================
+
+[app]
+# اللغة الافتراضية
+language = "ar"
+
+[video]
+# أبعاد الفيديو (عمودي مناسب للموبايل)
+video_aspect = "9:16"
+
+# الحد الأقصى لمدة الفيديو بالثواني
+video_clip_duration = 5
+
+# عدد الفيديوهات المتزامنة
+video_count = 1
+
+# جودة الفيديو النهائي
+video_resolution = "1080x1920"
+
+[content]
+# نوع المحتوى
+content_type = "kids_educational"
+target_age = "3-10"
+topic = "Islamic_Prayer"
+
+# أسلوب البحث عن الصور/الفيديوهات
+video_source = "pexels"   # pexels أو local
+video_language = "ar"
+
+[script]
+# عدد الفقرات في كل فيديو
+paragraph_count = 3
+
+# أقصى طول للفيديو بالثواني
+max_clip_duration = 60
+
+[audio]
+# صوت الراوي (عربي مناسب للأطفال)
+voice_name = "ar-SA-HamedNeural"
+voice_rate = 0     # سرعة الكلام (0 = طبيعي)
+voice_volume = 100
+bgm_enabled = true
+bgm_volume = 30    # صوت الموسيقى الخلفية منخفض
+
+[subtitle]
+# إعدادات الترجمة/النص على الشاشة
+font_name = "Cairo"          # خط عربي واضح
+font_size = 60
+font_color = "#FFFFFF"
+stroke_color = "#000000"
+stroke_width = 2
+subtitle_enabled = true
+subtitle_position = "bottom"
+
+[style]
+# أسلوب الفيديو الكرتوني للأطفال
+keywords = "cartoon, kids, colorful, cute, Islamic, prayer, animated, child-friendly"
+negative_keywords = "violence, adult, scary, dark"

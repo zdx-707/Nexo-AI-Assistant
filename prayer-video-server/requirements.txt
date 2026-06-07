@@ -1,0 +1,8 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+edge-tts==6.1.12
+requests==2.32.3
+aiofiles==23.2.1
+python-multipart==0.0.9
+imageio-ffmpeg==0.5.1
+Pillow==10.4.0
